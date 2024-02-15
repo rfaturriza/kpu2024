@@ -1,0 +1,20 @@
+[
+  {
+    "nama": "KALIMANTAN SELATAN",
+    "id": 191106,
+    "kode": "63",
+    "tingkat": 1
+  },
+  {
+    "nama": "KALIMANTAN TENGAH",
+    "id": 191102,
+    "kode": "62",
+    "tingkat": 1
+  },
+  {
+    "nama": "KALIMANTAN TIMUR",
+    "id": 191107,
+    "kode": "64",
+    "tingkat": 1
+  }
+]

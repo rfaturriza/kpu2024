@@ -1,0 +1,20 @@
+[
+  {
+    "nama": "LAMPUNG",
+    "id": 191093,
+    "kode": "18",
+    "tingkat": 1
+  },
+  {
+    "nama": "Luar Negeri",
+    "id": 200001,
+    "kode": "99",
+    "tingkat": 1
+  },
+  {
+    "nama": "MALUKU",
+    "id": 191115,
+    "kode": "81",
+    "tingkat": 1
+  }
+]

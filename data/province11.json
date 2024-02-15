@@ -1,0 +1,20 @@
+[
+  {
+    "nama": "SULAWESI TENGAH",
+    "id": 191110,
+    "kode": "72",
+    "tingkat": 1
+  },
+  {
+    "nama": "SULAWESI TENGGARA",
+    "id": 191112,
+    "kode": "74",
+    "tingkat": 1
+  },
+  {
+    "nama": "SULAWESI UTARA",
+    "id": 191109,
+    "kode": "71",
+    "tingkat": 1
+  }
+]

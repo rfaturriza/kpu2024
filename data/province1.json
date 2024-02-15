@@ -1,0 +1,20 @@
+[
+  {
+    "nama": "ACEH",
+    "id": 100054,
+    "kode": "11",
+    "tingkat": 1
+  },
+  {
+    "nama": "BALI",
+    "id": 191103,
+    "kode": "51",
+    "tingkat": 1
+  },
+  {
+    "nama": "BANTEN",
+    "id": 191100,
+    "kode": "36",
+    "tingkat": 1
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "nama": "MALUKU UTARA",
+    "id": 191116,
+    "kode": "82",
+    "tingkat": 1
+  },
+  {
+    "nama": "NUSA TENGGARA BARAT",
+    "id": 191104,
+    "kode": "52",
+    "tingkat": 1
+  },
+  {
+    "nama": "NUSA TENGGARA TIMUR",
+    "id": 191105,
+    "kode": "53",
+    "tingkat": 1
+  }
+]
