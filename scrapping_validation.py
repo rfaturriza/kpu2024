@@ -1,8 +1,5 @@
 from multiprocessing.pool import ThreadPool
 import time
-from bs4 import BeautifulSoup
-import requests
-import math
 from multiprocessing import Pool
 from multiprocessing import freeze_support
 from api import get_province_list, get_city_list, get_district_list, get_village_list, get_tps_list, get_tps_detail, get_candidate_list
@@ -27,7 +24,7 @@ def loop_city(province):
     for city in list_city:
         city_code = city['kode']
         list_district = get_district_list(province_code, city_code)
-        loop_district(list_district)
+        loop_district(list_district, province, city)
 
 def loop_district(districts, province, city):
     province_code = province['kode']
@@ -35,7 +32,7 @@ def loop_district(districts, province, city):
     for district in districts:
         district_code = district['kode']
         list_village = get_village_list(province_code, city_code, district_code)
-        loop_village(list_village)
+        loop_village(list_village, province, city, district)
 
 def loop_village(villages, province, city, district):
     province_code = province['kode']
@@ -44,7 +41,7 @@ def loop_village(villages, province, city, district):
     for village in villages:
         village_code = village['kode']
         list_tps = get_tps_list(province_code, city_code, district_code, village_code)
-        loop_tps(list_tps)
+        loop_tps(list_tps, province, city, district, village)
 
 def loop_tps(list_tps, province, city, district, village):
     province_code = province['kode']
@@ -86,7 +83,7 @@ def loop_tps(list_tps, province, city, district, village):
             continue
 
 def main():
-    start = time.clock()
+    start = time.process_time()
     provinces_json_file = open('province.json')
     provinces = json.load(provinces_json_file)
 
@@ -95,7 +92,7 @@ def main():
         # call the function for each item concurrently
         pool.map(loop_city, provinces)
 
-    print("processing time: {}mins\n".format((time.clock()-start)/60))
+    print("processing time: {}mins\n".format((time.process_time()-start)/60))
                         
 if __name__ == "__main__":
     freeze_support()   # required to use multiprocessing
