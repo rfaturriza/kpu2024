@@ -6,6 +6,7 @@ import math
 from multiprocessing import Pool
 from multiprocessing import freeze_support
 from api import get_province_list, get_city_list, get_district_list, get_village_list, get_tps_list, get_tps_detail, get_candidate_list
+import json
 
 candidate = get_candidate_list()
 
@@ -86,12 +87,13 @@ def loop_tps(list_tps, province, city, district, village):
 
 def main():
     start = time.clock()
-    list_province = get_province_list()
+    provinces_json_file = open('province.json')
+    provinces = json.load(provinces_json_file)
 
     # create a thread pool for multi processing
     with ThreadPool() as pool:
         # call the function for each item concurrently
-        pool.map(loop_city, list_province)
+        pool.map(loop_city, provinces)
 
     print("processing time: {}mins\n".format((time.clock()-start)/60))
                         
