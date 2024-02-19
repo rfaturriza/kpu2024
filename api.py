@@ -105,7 +105,7 @@ api_candidate = 'pemilu/ppwp.json'
 
 def get_province_list():
     url = api_url + api_enpoint_list_province
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     if response.status_code == 200:
         return response.json()
     else:
@@ -113,7 +113,7 @@ def get_province_list():
 
 def get_city_list(province_id):
     url = api_url + api_ppwp + province_id + '.json'
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     if response.status_code == 200:
         return response.json()
     else:
@@ -121,7 +121,7 @@ def get_city_list(province_id):
 
 def get_district_list(province_id, city_id):
     url = api_url + api_ppwp + province_id + '/' + city_id + '.json'
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     if response.status_code == 200:
         return response.json()
     else:
@@ -129,7 +129,7 @@ def get_district_list(province_id, city_id):
 
 def get_village_list(province_id, city_id, district_id):
     url = api_url + api_ppwp + province_id + '/' + city_id + '/' + district_id + '.json'
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     if response.status_code == 200:
         return response.json()
     else:
@@ -137,7 +137,7 @@ def get_village_list(province_id, city_id, district_id):
 
 def get_tps_list(province_id, city_id, district_id, village_id):
     url = api_url + api_ppwp + province_id + '/' + city_id + '/' + district_id + '/' + village_id + '.json'
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     if response.status_code == 200:
         return response.json()
     else:
@@ -145,7 +145,7 @@ def get_tps_list(province_id, city_id, district_id, village_id):
 
 def get_tps_detail(province_id, city_id, district_id, village_id, tps_id):
     url = api_url + api_hhcw_ppwp + province_id + '/' + city_id + '/' + district_id + '/' + village_id + '/' + tps_id + '.json'
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     if response.status_code == 200:
         return response.json()
     else:
@@ -153,7 +153,7 @@ def get_tps_detail(province_id, city_id, district_id, village_id, tps_id):
 
 def get_candidate_list():
     url = api_url + api_candidate
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     if response.status_code == 200:
         return response.json()
     else:

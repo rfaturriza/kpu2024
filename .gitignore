@@ -1,2 +1,5 @@
 *.csv
 .conda
+kpu2024-dca0549f3753.json
+__pycache__
+*.zip

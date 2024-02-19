@@ -1,0 +1,434 @@
+{
+  "result": {
+    "names": ["ACEH", "ACEH BARAT", "ARONGAN LAMBALEK", "ALUE BAGOK"],
+    "id": "1105072002",
+    "aggregated": {
+      "1": [
+        {
+          "pendingUploads": {},
+          "totalKpuTps": 1,
+          "totalLaporTps": 3,
+          "idLokasi": "11050720021",
+          "pas2": 15,
+          "totalTps": 1,
+          "pas3": 0,
+          "totalCompletedTps": 1,
+          "dpt": 156,
+          "totalJagaTps": 1,
+          "totalPendingTps": 0,
+          "uid": "kpu_uid",
+          "anyLaporTps": "11050720021",
+          "ouid": "kpu_uid",
+          "name": "1",
+          "totalErrorTps": 0,
+          "pas1": 121,
+          "updateTs": 1708184031235
+        },
+        {
+          "pendingUploads": {},
+          "totalLaporTps": 1,
+          "idLokasi": "11050720021",
+          "pas2": 15,
+          "totalTps": 1,
+          "pas3": 0,
+          "totalCompletedTps": 1,
+          "dpt": 156,
+          "totalJagaTps": 1,
+          "totalPendingTps": 0,
+          "uid": "kpu_uid",
+          "anyLaporTps": "11050720021",
+          "uploadedPhoto": {
+            "kpuData": {
+              "status_adm": true,
+              "administrasi": {
+                "pengguna_total_j": 142,
+                "pengguna_non_dpt_l": 1,
+                "suara_total": 142,
+                "pengguna_non_dpt_j": 2,
+                "pengguna_non_dpt_p": 1,
+                "pemilih_dpt_p": 82,
+                "pemilih_dpt_l": 74,
+                "pengguna_dpt_l": 65,
+                "pemilih_dpt_j": 156,
+                "pengguna_dptb_p": 0,
+                "pengguna_dpt_j": 140,
+                "suara_tidak_sah": 6,
+                "suara_sah": 136,
+                "pengguna_total_p": 76,
+                "pengguna_dpt_p": 75,
+                "pengguna_dptb_j": 0,
+                "pengguna_dptb_l": 0,
+                "pengguna_total_l": 66
+              },
+              "images": [
+                "https://sirekap-obj-formc.kpu.go.id/2e38/pemilu/ppwp/11/05/07/20/02/1105072002001-20240215-022619--f005fee9-5a36-4a4e-89c4-8c7776de09fd.jpg",
+                "https://sirekap-obj-formc.kpu.go.id/2e38/pemilu/ppwp/11/05/07/20/02/1105072002001-20240215-033531--18bbb7a3-7d3d-485e-868c-d494cc68276d.jpg",
+                "https://sirekap-obj-formc.kpu.go.id/2e38/pemilu/ppwp/11/05/07/20/02/1105072002001-20240215-022835--b71ea204-9689-4149-80c6-03712c6ba099.jpg"
+              ],
+              "psu": null,
+              "status_suara": true,
+              "chart": {
+                "100025": 121,
+                "100026": 15,
+                "100027": 0,
+                "null": null
+              },
+              "ts": "2024-02-16 09:30:28"
+            },
+            "photoUrl": "http://lh3.googleusercontent.com/ioPQMkJ4McUtzpUlzqAew5zgoI99Ntnl4EWrom-Bd--qvmNr721OD1PZW2hFk4z5gPA0h_3y75BP0Yoyvm7EAtthuItMBFBreHsKg4U",
+            "lapor": "Tidak ada saksi 02 dan 03",
+            "imageId": "0vm0A2R7uSvSbAa1TbIg",
+            "samBot": {
+              "transformedUrl": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/1/ioPQMkJ4McUtzpUlzqAew5zgoI99Ntnl4EWrom-Bd--qvmNr721OD1PZW2hFk4z5gPA0h_3y75BP0Yoyvm7EAtthuItMBFBreHsKg4U%3Ds1280.webp",
+              "similarity": 87.0670278758942,
+              "configFile": "pilpres_2024_plano_halaman2.json",
+              "extractedRoi": [
+                {
+                  "paslon": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/1/extracted/ioPQMkJ4McUtzpUlzqAew5zgoI99Ntnl4EWrom-Bd--qvmNr721OD1PZW2hFk4z5gPA0h_3y75BP0Yoyvm7EAtthuItMBFBreHsKg4U%3Ds1280~paslon.webp"
+                },
+                {
+                  "bubbleSheet1": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/1/extracted/ioPQMkJ4McUtzpUlzqAew5zgoI99Ntnl4EWrom-Bd--qvmNr721OD1PZW2hFk4z5gPA0h_3y75BP0Yoyvm7EAtthuItMBFBreHsKg4U%3Ds1280~bubbleSheet1.webp"
+                },
+                {
+                  "bubbleSheet2": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/1/extracted/ioPQMkJ4McUtzpUlzqAew5zgoI99Ntnl4EWrom-Bd--qvmNr721OD1PZW2hFk4z5gPA0h_3y75BP0Yoyvm7EAtthuItMBFBreHsKg4U%3Ds1280~bubbleSheet2.webp"
+                },
+                {
+                  "bubbleSheet3": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/1/extracted/ioPQMkJ4McUtzpUlzqAew5zgoI99Ntnl4EWrom-Bd--qvmNr721OD1PZW2hFk4z5gPA0h_3y75BP0Yoyvm7EAtthuItMBFBreHsKg4U%3Ds1280~bubbleSheet3.webp"
+                },
+                {
+                  "lokasi": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/1/extracted/ioPQMkJ4McUtzpUlzqAew5zgoI99Ntnl4EWrom-Bd--qvmNr721OD1PZW2hFk4z5gPA0h_3y75BP0Yoyvm7EAtthuItMBFBreHsKg4U%3Ds1280~lokasi.webp"
+                }
+              ],
+              "digitArea": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/1/extracted/ioPQMkJ4McUtzpUlzqAew5zgoI99Ntnl4EWrom-Bd--qvmNr721OD1PZW2hFk4z5gPA0h_3y75BP0Yoyvm7EAtthuItMBFBreHsKg4U%3Ds1280~digit-area.webp",
+              "bubbleNumbers": {
+                "anies": 418,
+                "prabowo": 472,
+                "confidence": 0.13599240639863078,
+                "ganjar": 200
+              },
+              "hash": "5775074943658633812",
+              "neuralNumbers": {
+                "anies": 161,
+                "prabowo": 2,
+                "confidence": 0.13599240639863078,
+                "ganjar": 188
+              },
+              "outcome": {
+                "anies": 418,
+                "prabowo": 472,
+                "confidence": 0.13599240639863078,
+                "ganjar": 200
+              }
+            },
+            "laporResolved": false
+          },
+          "ouid": "kpu_uid",
+          "name": "1",
+          "totalErrorTps": 0,
+          "pas1": 121,
+          "updateTs": 1708009844481
+        },
+        {
+          "pendingUploads": {},
+          "totalLaporTps": 0,
+          "idLokasi": "11050720021",
+          "pas2": 15,
+          "totalTps": 1,
+          "pas3": 0,
+          "totalCompletedTps": 1,
+          "dpt": 156,
+          "totalJagaTps": 1,
+          "totalPendingTps": 1,
+          "anyPendingTps": "11050720021",
+          "uid": "BfPrmOpWekQ2kyHKd6f3JO7CNNf2",
+          "anyLaporTps": "11050720021",
+          "uploadedPhoto": {
+            "photoUrl": "http://lh3.googleusercontent.com/vuSScuF_MJZg6UmG7tQFulb7G2sKehPTloOglbxwFJXEHySlzdMdFclJysZV6ih_r8GJn3r_Y7NzyPWsAw2ebRTVl7PwvhdE31aWwQ",
+            "lapor": "TANDA TANGAN SAKSI 02 & 03 TIDAK ADA",
+            "imageId": "xvANFtm90NcsX1o8tnov",
+            "laporResolved": true
+          },
+          "ouid": "F6pe9jqSvBhPkwxMiV2QJrel04w2",
+          "name": "1",
+          "totalErrorTps": 0,
+          "pas1": 121,
+          "updateTs": 1707956766890
+        },
+        {
+          "pendingUploads": {},
+          "totalLaporTps": 1,
+          "idLokasi": "11050720021",
+          "pas2": 15,
+          "totalTps": 1,
+          "pas3": 0,
+          "totalCompletedTps": 1,
+          "dpt": 156,
+          "totalJagaTps": 1,
+          "totalPendingTps": 1,
+          "anyPendingTps": "11050720021",
+          "uid": "BfPrmOpWekQ2kyHKd6f3JO7CNNf2",
+          "anyLaporTps": "11050720021",
+          "uploadedPhoto": {
+            "photoUrl": "http://lh3.googleusercontent.com/P4Lu39BAvwvRikkv10GIK5nhk95l9ya_xpOPS4FnGqLHOs1TRE9rA8fo68JCuGaP8c7O8COdQxUdW57XNY0hHOGBDZOsUG_uH53H",
+            "lapor": "Salah input jumlah seharusnya 136",
+            "imageId": "5Lq1UESCoItUZalqah2s",
+            "laporResolved": false
+          },
+          "ouid": "6zsEL31RKSdc0x3ldrfAmIXMcip2",
+          "name": "1",
+          "totalErrorTps": 0,
+          "pas1": 121,
+          "updateTs": 1707948238426
+        },
+        {
+          "pendingUploads": {},
+          "totalLaporTps": 1,
+          "idLokasi": "11050720021",
+          "pas2": 15,
+          "totalTps": 1,
+          "pas3": 0,
+          "totalCompletedTps": 0,
+          "dpt": 156,
+          "totalJagaTps": 1,
+          "totalPendingTps": 1,
+          "anyPendingTps": "11050720021",
+          "uid": "04a5bwvr2QhL4u2gG3hofjuixyK2",
+          "uploadedPhoto": {
+            "photoUrl": "http://lh3.googleusercontent.com/QMc0i948bwqIZRr395FlYTe2rvjVebfIVbho6L-PQGoJ20sicwLDATe29XQReB3KOxtifvMaCfdN4FZaxwZzLG1muy8SuE8RkjrRCjA",
+            "lapor": "Tidak ada tanda tangan saksi paslon 2 dan 3",
+            "imageId": "tdeMwjLh0lRAXwJS9kuo",
+            "laporResolved": false
+          },
+          "ouid": "TTqT7YEDX5OPi5HMPmt1iMz75gi2",
+          "name": "1",
+          "totalErrorTps": 0,
+          "pas1": 121,
+          "updateTs": 1707942212410
+        }
+      ],
+      "2": [
+        {
+          "pendingUploads": {},
+          "totalKpuTps": 1,
+          "totalLaporTps": 5,
+          "idLokasi": "11050720022",
+          "pas2": 14,
+          "totalTps": 1,
+          "pas3": 1,
+          "totalCompletedTps": 1,
+          "dpt": 178,
+          "totalJagaTps": 1,
+          "totalPendingTps": 0,
+          "uid": "kpu_uid",
+          "anyLaporTps": "11050720022",
+          "ouid": "kpu_uid",
+          "name": "2",
+          "totalErrorTps": 0,
+          "pas1": 149,
+          "updateTs": 1708184330345
+        },
+        {
+          "pendingUploads": {},
+          "totalLaporTps": 1,
+          "idLokasi": "11050720022",
+          "pas2": 14,
+          "totalTps": 1,
+          "pas3": 1,
+          "totalCompletedTps": 1,
+          "dpt": 178,
+          "totalJagaTps": 1,
+          "totalPendingTps": 0,
+          "uid": "kpu_uid",
+          "anyLaporTps": "11050720022",
+          "uploadedPhoto": {
+            "kpuData": {
+              "status_adm": false,
+              "administrasi": null,
+              "images": [
+                "https://sirekap-obj-formc.kpu.go.id/094b/pemilu/ppwp/11/05/07/20/02/1105072002002-20240214-203024--c023eb73-202b-4a05-b08e-9f28d1b48b0b.jpg",
+                "https://sirekap-obj-formc.kpu.go.id/094b/pemilu/ppwp/11/05/07/20/02/1105072002002-20240214-203932--c73474ac-cdb9-4d2f-8239-16106bc03078.jpg",
+                "https://sirekap-obj-formc.kpu.go.id/094b/pemilu/ppwp/11/05/07/20/02/1105072002002-20240214-204258--85cf368b-902f-48e8-92c9-5006e7110210.jpg"
+              ],
+              "psu": null,
+              "status_suara": true,
+              "chart": {
+                "100025": 149,
+                "100026": 14,
+                "100027": 1,
+                "null": null
+              },
+              "ts": "2024-02-15 09:00:24"
+            },
+            "photoUrl": "http://lh3.googleusercontent.com/3LvZmVA_DUsVAHPyXEPbs_4tGq4RhY4IZ5dfz7C4l_MS9m9nRwVbaX6814y45kwDsOkX6avxWMBo8dEsSkTnLN96FrXO_rktpUMq",
+            "lapor": "Tidak ada ttd saksi 02 dan 03",
+            "imageId": "Q8tAV63P0Fl94JZwvKKo",
+            "samBot": {
+              "transformedUrl": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/2/3LvZmVA_DUsVAHPyXEPbs_4tGq4RhY4IZ5dfz7C4l_MS9m9nRwVbaX6814y45kwDsOkX6avxWMBo8dEsSkTnLN96FrXO_rktpUMq%3Ds1280.webp",
+              "similarity": 92.87635685489269,
+              "configFile": "pilpres_2024_plano_halaman2.json",
+              "extractedRoi": [
+                {
+                  "paslon": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/2/extracted/3LvZmVA_DUsVAHPyXEPbs_4tGq4RhY4IZ5dfz7C4l_MS9m9nRwVbaX6814y45kwDsOkX6avxWMBo8dEsSkTnLN96FrXO_rktpUMq%3Ds1280~paslon.webp"
+                },
+                {
+                  "bubbleSheet1": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/2/extracted/3LvZmVA_DUsVAHPyXEPbs_4tGq4RhY4IZ5dfz7C4l_MS9m9nRwVbaX6814y45kwDsOkX6avxWMBo8dEsSkTnLN96FrXO_rktpUMq%3Ds1280~bubbleSheet1.webp"
+                },
+                {
+                  "bubbleSheet2": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/2/extracted/3LvZmVA_DUsVAHPyXEPbs_4tGq4RhY4IZ5dfz7C4l_MS9m9nRwVbaX6814y45kwDsOkX6avxWMBo8dEsSkTnLN96FrXO_rktpUMq%3Ds1280~bubbleSheet2.webp"
+                },
+                {
+                  "bubbleSheet3": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/2/extracted/3LvZmVA_DUsVAHPyXEPbs_4tGq4RhY4IZ5dfz7C4l_MS9m9nRwVbaX6814y45kwDsOkX6avxWMBo8dEsSkTnLN96FrXO_rktpUMq%3Ds1280~bubbleSheet3.webp"
+                },
+                {
+                  "lokasi": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/2/extracted/3LvZmVA_DUsVAHPyXEPbs_4tGq4RhY4IZ5dfz7C4l_MS9m9nRwVbaX6814y45kwDsOkX6avxWMBo8dEsSkTnLN96FrXO_rktpUMq%3Ds1280~lokasi.webp"
+                }
+              ],
+              "digitArea": "https://storage.googleapis.com/kawalc1/static/2024/transformed/1105072002/2/extracted/3LvZmVA_DUsVAHPyXEPbs_4tGq4RhY4IZ5dfz7C4l_MS9m9nRwVbaX6814y45kwDsOkX6avxWMBo8dEsSkTnLN96FrXO_rktpUMq%3Ds1280~digit-area.webp",
+              "bubbleNumbers": {
+                "anies": 149,
+                "prabowo": 125,
+                "confidence": 0.9534224821316394,
+                "ganjar": 112
+              },
+              "hash": "12104541428369492",
+              "neuralNumbers": {
+                "anies": 149,
+                "prabowo": 14,
+                "confidence": 0.9534224821316394,
+                "ganjar": 1
+              },
+              "outcome": {
+                "anies": 149,
+                "prabowo": 14,
+                "confidence": 0.9534224821316394,
+                "ganjar": 1
+              }
+            },
+            "laporResolved": false
+          },
+          "ouid": "kpu_uid",
+          "name": "2",
+          "totalErrorTps": 0,
+          "pas1": 149,
+          "updateTs": 1708052821108
+        },
+        {
+          "pendingUploads": {},
+          "totalLaporTps": 1,
+          "idLokasi": "11050720022",
+          "pas2": 14,
+          "totalTps": 1,
+          "pas3": 1,
+          "totalCompletedTps": 1,
+          "dpt": 178,
+          "totalJagaTps": 1,
+          "totalPendingTps": 1,
+          "anyPendingTps": "11050720022",
+          "uid": "BfPrmOpWekQ2kyHKd6f3JO7CNNf2",
+          "anyLaporTps": "11050720022",
+          "uploadedPhoto": {
+            "photoUrl": "http://lh3.googleusercontent.com/Kgx3KjRsdvh_SxDzmnX0z5alKbkbtDIswBe8TnZfAet5D3kYaWcaM51jBWZw_CGIZuHo_XHODleM6uQuZx3UbPksdqZfbfXVYdyy-Q",
+            "lapor": "TANDA TANGAN SAKI 02 & 03 TIDAK ADA",
+            "imageId": "p00bPcTuXD7RXQVrt1Cr",
+            "laporResolved": false
+          },
+          "ouid": "BfPrmOpWekQ2kyHKd6f3JO7CNNf2",
+          "name": "2",
+          "totalErrorTps": 0,
+          "pas1": 149,
+          "updateTs": 1707977502256
+        },
+        {
+          "pendingUploads": {},
+          "totalLaporTps": 2,
+          "idLokasi": "11050720022",
+          "pas2": 14,
+          "totalTps": 1,
+          "pas3": 1,
+          "totalCompletedTps": 1,
+          "dpt": 178,
+          "totalJagaTps": 1,
+          "totalPendingTps": 1,
+          "anyPendingTps": "11050720022",
+          "uid": "CgHbGmbw7PN4p7gxYdOxv7ypRC13",
+          "anyLaporTps": "11050720022",
+          "uploadedPhoto": {
+            "photoUrl": "http://lh3.googleusercontent.com/hPGhRwenMcAz6kY620nnV0i6ksIaOCQlITmTXpz3ntdCZmwWofxsMis8-oZa90VCtmGn6lluKxnVp0g0wjWZfnHDjbq7k6CaZ_GU",
+            "imageId": "is94TBeUat17UygN2OdO"
+          },
+          "ouid": "F6pe9jqSvBhPkwxMiV2QJrel04w2",
+          "name": "2",
+          "totalErrorTps": 0,
+          "pas1": 149,
+          "updateTs": 1707956822545
+        },
+        {
+          "pendingUploads": {},
+          "totalLaporTps": 1,
+          "idLokasi": "11050720022",
+          "pas2": 14,
+          "totalTps": 1,
+          "pas3": 1,
+          "totalCompletedTps": 1,
+          "dpt": 178,
+          "totalJagaTps": 1,
+          "totalPendingTps": 1,
+          "anyPendingTps": "11050720022",
+          "uid": "04a5bwvr2QhL4u2gG3hofjuixyK2",
+          "anyLaporTps": "11050720022",
+          "uploadedPhoto": {
+            "photoUrl": "http://lh3.googleusercontent.com/wm1k7atWKbvpFuJFZ4NzqB0FhC4OM-Q2P8TgG50PkeMfmepijtQ2hSF-nrbNe3MMEi06xIN1EYN-3zw2GAftgIr4HKq9g2MSsxAROQ",
+            "lapor": "Tidak ada tanda tangan saksi paslon 2 dan 3",
+            "imageId": "bVvQSOO15H2eAp13sB12",
+            "laporResolved": false
+          },
+          "ouid": "RjgWRrGuobW8y4xplJV13pToHFl1",
+          "name": "2",
+          "totalErrorTps": 0,
+          "pas1": 149,
+          "updateTs": 1707935927357
+        },
+        {
+          "pendingUploads": {
+            "ZjB4Fzd66BFaWK0NcluB": "http://lh3.googleusercontent.com/uu7_On51wwuvYzAfCcrEBOqnfSoCFsthFLwblTyLaDm1OaMg7-8TIELQ7xR2df8En6DVkwofYVKHPNWd2EooVo_xBSOBBjNB71Rf48Q",
+            "xRaAJQBkQpg7zZbcEv9n": "http://lh3.googleusercontent.com/9FcO8PI6TLOuWzgPjiXm-QcrqaOIABwUg0UoUrMLfkupSas_Om4bGgHYQROuUMpJMY4ZgG8EI5lLWgdZJg6Gy21AviJ9tvg6KIzW",
+            "gowwa5xKB4rJ4warqwJl": "http://lh3.googleusercontent.com/xeu_TJfeoJJLrMGvJEOR3ldPS2LWYmBLmiUc8QB_gN89FjTLlFHQ_vmzNA_CSSlVun8MGB7YtyZsvXiiWxrvPDTT6Y4bVWzUNaSYIw",
+            "P4lcpAWFQLDlcGCU4wcZ": "http://lh3.googleusercontent.com/_pdS_xxD-LYNc4Pw_UexR3WzPfAL79VyErcKkUDmRRQL3SfM_5OOPf-kMPjk-l2hJ0e2FqqDo1Qi2O-rPxPt0PDrSaprN6pjY_DyUyk",
+            "aE7JfoJIJUobB1kf2hjy": "http://lh3.googleusercontent.com/MOrISyayIsUxUv7IxQbtyWW_v7iOTEZKeQW2nx883GC5kBz2nmUbAQrZmUHqJo1ze4vx9EkPXzavC7fYUM06qh3ucp2P9oxPVbluC38",
+            "TaKuSNQOV4ynn2J8jTdj": "http://lh3.googleusercontent.com/HXComYZ175UMuDwVvO0VSilWEpjd6MFzKCoa0c2P9bI21hhNyuiAOcCNM7uQpxf4e9oWlMKG1VFQMuEbdnttuuBx9H0JCxTxiYFiaQ",
+            "zffKZjQIDQdtmvE1GLOz": "http://lh3.googleusercontent.com/lUAEQfpeH1N0NUGYESrOIBp_p1bXWA3cPSlT7Zf8kOqo661a4lV2KMDR-vfLJbd67d2JLv0A5T6Bvg_AOWTHZ_opEqmc-vcqPFyv0Q",
+            "3WSNYiKohmDhXq5PZUlm": "http://lh3.googleusercontent.com/iCa2CiUShNHNVl7LpZx6EZ-RUTRwqlZ0vTUpjdl1CtO3TmCQV1e5Npbzu6Y7TdIq2IiAacoC5WF03mYMlB4_7vgcPGZ9JCoI6cpp",
+            "HmlOOhPkCcIKiq4Zr8hj": "http://lh3.googleusercontent.com/akiNTSdai7dbDQdz2IXQe-yYlLDAF9Sd7_L-qSVZDPfMZ-CCTecNnmupkFmS8ICU2G23ewZkJsOMO6ZCj-C7mAB-lvwKcx2LJAt4Z3Y",
+            "fAuOzWLRLWsMgJUGFWGX": "http://lh3.googleusercontent.com/JY_rcOzJWRzBdfEA-syDHKMP-UiUT_aC06sRWGSE52rP3nz8ey62iOc9Oi-W4d2koUJOuB-3pmCJ1y9dHiL3INevpQtJB073ZDl8rA",
+            "Gp2K0vXRtyqSD5jdTabw": "http://lh3.googleusercontent.com/D_vtGv5oteLgxd1W9CRGGD6OR8Og68-zowsnL_aEzF4g3WiC_uEQdfZ76zTYrPSbQIUTQ9KKvviIBKyBQ1dm59lkI0vj23wCYqrO",
+            "NGb0Ho5dGNJqfjYFdKfE": "http://lh3.googleusercontent.com/T0Zgokmu1o68bVtNFopdjJpx7tI-xJ2YA1gAVXJ1auhCziDFBSEOwoa4oFDuYAgox4kqQmEwpPNdc6fasdfJ72nPXk6RWld30N5suw"
+          },
+          "totalLaporTps": 1,
+          "idLokasi": "11050720022",
+          "pas2": 14,
+          "totalTps": 1,
+          "pas3": 1,
+          "totalCompletedTps": 0,
+          "dpt": 178,
+          "totalJagaTps": 1,
+          "totalPendingTps": 1,
+          "anyPendingTps": "11050720022",
+          "uid": "QZYIUX3Hu8ZSy6kuewkBBcy2JXU2",
+          "uploadedPhoto": {
+            "photoUrl": "http://lh3.googleusercontent.com/jY-Z5BDSwNnqDqTK0XswBcHFQQtfwDgq1P9Avl0Cr17Sa2G1RzzMXF8HbCEZhZB9jLZGZeW1fpRLCRa1pLSQB5GnAjTVkKcsiUNW",
+            "lapor": ".",
+            "imageId": "1d9VWdFuJEfWujLlCFYh",
+            "laporResolved": false
+          },
+          "ouid": "3td4eWx3L3MudPAlIDdBVyFUZ0H2",
+          "name": "2",
+          "totalErrorTps": 0,
+          "pas1": 149,
+          "updateTs": 1707927537372
+        }
+      ]
+    },
+    "numWrites": 0,
+    "lastCachedTs": 1708219718101
+  }
+}

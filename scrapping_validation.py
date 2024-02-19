@@ -25,7 +25,7 @@ def file_name_args():
         else:
             return args.file
     else:
-        return 'province.json'
+        return 'data/province.json'
 file_json = file_name_args().split('.')[0]
 result_file = 'result/result-' + file_json + '-' + timestamp + '.csv'
 error_result_file = 'result/error_result-' + file_json + '-' + timestamp + '.csv'
@@ -109,7 +109,7 @@ def loop_tps(list_tps, province, city, district, village):
 def main():
     start = time.process_time()
 
-    default_file = 'province.json'
+    default_file = 'data/province.json'
     if args.file:
         print("Processing file: " + args.file)
         default_file = args.file
