@@ -22,58 +22,88 @@ endpoint_candidate = 'pemilu/ppwp.json'
 # Example fetch url TPS Detail 'pemilu/hhcw/ppwp/11/1105/110507/1105072002/1105072002002.json'
 # pemilu/hhcw/ppwp/${province_code}/${city_code}/${district_code}/${village_code}/${tps_code}/${tps_code}.json
 
-
 def get_province_list():
-    url = api_url + api_enpoint_list_province
-    response = requests.get(url, timeout=10)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+    try:
+        url = api_url + api_enpoint_list_province
+        response = requests.get(url, timeout=30)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+    except requests.exceptions.Timeout:
+        get_province_list()
+    except Exception as e:
+        raise e
 
 def get_city_list(province_id):
     url = api_url + enpoint_ppwp + province_id + '.json'
-    response = requests.get(url, timeout=10)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+    try:
+        response = requests.get(url, timeout=30)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+    except requests.exceptions.Timeout:
+        get_city_list(province_id)
+    except Exception as e:
+        raise e
 
 def get_district_list(province_id, city_id):
     url = api_url + enpoint_ppwp + province_id + '/' + city_id + '.json'
-    response = requests.get(url, timeout=10)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+    try:
+        response = requests.get(url, timeout=30)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+    except requests.exceptions.Timeout:
+        get_district_list(province_id, city_id)
+    except Exception as e:
+        raise e
 
 def get_village_list(province_id, city_id, district_id):
     url = api_url + enpoint_ppwp + province_id + '/' + city_id + '/' + district_id + '.json'
-    response = requests.get(url, timeout=10)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+    try:
+        response = requests.get(url, timeout=30)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+    except requests.exceptions.Timeout:
+        get_village_list(province_id, city_id, district_id)
+    except Exception as e:
+        raise e
 
 def get_tps_list(province_id, city_id, district_id, village_id):
     url = api_url + enpoint_ppwp + province_id + '/' + city_id + '/' + district_id + '/' + village_id + '.json'
-    response = requests.get(url, timeout=10)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+    try:
+        
+        response = requests.get(url, timeout=30)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+    except requests.exceptions.Timeout:
+        get_tps_list(province_id, city_id, district_id, village_id)
+    except Exception as e:
+        raise e
 
 def get_tps_detail(province_id, city_id, district_id, village_id, tps_id):
     url = api_url + enpoint_hhcw_ppwp + province_id + '/' + city_id + '/' + district_id + '/' + village_id + '/' + tps_id + '.json'
-    response = requests.get(url, timeout=10)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+    try:
+        response = requests.get(url, timeout=30)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+    except requests.exceptions.Timeout:
+        get_tps_detail(province_id, city_id, district_id, village_id, tps_id)
+    except Exception as e:
+        raise e
 
 def get_candidate_list():
     url = api_url + endpoint_candidate
-    response = requests.get(url, timeout=10)
+    response = requests.get(url, timeout=30)
     if response.status_code == 200:
         return response.json()
     else:

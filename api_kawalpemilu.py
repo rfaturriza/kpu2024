@@ -10,12 +10,14 @@ def get_detail_village(village_code):
             params={
                 'id': village_code
             },
-            timeout=10
+            timeout=30
         )
         if response.status_code == 200:
             return response.json()
         else:
             return None
+    except requests.exceptions.Timeout:
+        get_detail_village(village_code)
     except Exception as e:
         print('error get_detail_village: ' + str(e))
         raise e

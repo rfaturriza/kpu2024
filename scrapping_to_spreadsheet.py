@@ -5,11 +5,8 @@ import time
 import json
 import os
 from datetime import datetime
-from multiprocessing import freeze_support
-from multiprocessing.pool import ThreadPool
 import pandas as pd
 import csv
-
 
 def get_candidate():
     candidate_json_file = open('data/candidates.json')
@@ -27,6 +24,8 @@ def create_file(city):
     city_name = city['nama']
     global result_file
     result_file = 'result/result-' + city_name + '-' + create_file_time + '.csv'
+    if not os.path.exists('result'):
+        os.makedirs('result')
     with open(result_file, 'w') as f:
         f.write('ID TPS,KODE TPS,Tanggal Pendataan,Kecamatan,Kelurahan,TPS,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Link Web KPU,Link Foto C1,Notes Sistem\n')
 
@@ -53,7 +52,7 @@ def loop_city(province):
         data = 'result/result-' + city_name + '-' + create_file_time + '.csv'
         update_spreadsheet(city, data)
         # TODO:Remove this break
-        break
+        # break
 
 def loop_district(districts, province, city):
     province_code = province['kode']
@@ -89,25 +88,11 @@ def loop_tps(list_tps, province, city, district, village):
         data_kawal_pemilu = None
 
     for index, tps in enumerate(list_tps):
-        # col A - No (SkIPPED)
-        # col B - ID TPS
-        # col C - KODE TPS
-        # col D - Tanggal Pendataan
-        # col E - Kecamatan
-        # col F - Kelurahan
-        # col G - TPS
-        # col H - Seluruh Paslon - KPU
-        # col I - Paslon 01
-        # col J - Paslon 02
-        # col K - Paslon 03
-        # col L - Seluruh Paslon - C1 (Kawal Pemilu)
-        # col M - Paslon 01
-        # col N - Paslon 02
-        # col O - Paslon 03
-        # col P - Link Web KPU
-        # col Q - Link Foto C1
-        # col R - Notes Sistem
-        # col S - Daftar Id Perubahan Data
+        # Prevent rate limit connection
+        global count_loop
+        count_loop += 1
+        if (count_loop) % 100 == 0:
+            time.sleep(30)
 
         identifier = [str(tps['id']) , tps['kode'] , time.strftime('%Y-%m-%d %H:%M:%S') , district['nama'] , village['nama'],tps['nama']]
         try:
@@ -121,95 +106,150 @@ def loop_tps(list_tps, province, city, district, village):
                 key_03 = list(candidate.keys())[2]
 
                 polling_result = tps_detail['chart']
-                polling_result_01 = polling_result[key_01]
-                polling_result_02 = polling_result[key_02]              
-                polling_result_03 = polling_result[key_03]
-                total_polling = polling_result_01 + polling_result_02 + polling_result_03
+                pas1_kpu = polling_result[key_01]
+                pas2_kpu = polling_result[key_02]              
+                pas3_kpu = polling_result[key_03]
+                total_kpu = pas1_kpu + pas2_kpu + pas3_kpu
             except:
                 polling_result_01 = ''
-                polling_result_02 = ''
-                polling_result_03 = ''
-                total_polling = ''
+                pas2_kpu = ''
+                pas3_kpu = ''
+                total_kpu = ''
 
             try:
+                if polling_result_01 == '' and pas2_kpu == '' and pas3_kpu == '':
+                    raise Exception('Data KPU Kosong')
+                
                 if data_kawal_pemilu is None:
-                    tps_detail_kawal_pemilu = {'pas1': '', 'pas2': '', 'pas3': ''}
+                    tps_detail_kawal_pemilu_main = {'pas1': '', 'pas2': '', 'pas3': ''}
                     note_sistem = 'Data Kawal Pemilu Gagal Diambil'
                 else:
-                    len_kawal_pemilu = len(data_kawal_pemilu['result']['aggregated'][str(index + 1)])
-                    tps_detail_kawal_pemilu = data_kawal_pemilu['result']['aggregated'][str(index + 1)][0]
+                    list_tps_detail_kawal_pemilu = data_kawal_pemilu['result']['aggregated'][str(index + 1)]
+                    len_kawal_pemilu = len(list_tps_detail_kawal_pemilu)
+                    tps_detail_kawal_pemilu_main = list_tps_detail_kawal_pemilu[0]
 
-                pas1_kawal_pemilu = tps_detail_kawal_pemilu['pas1']
-                pas2_kawal_pemilu = tps_detail_kawal_pemilu['pas2']
-                pas3_kawal_pemilu = tps_detail_kawal_pemilu['pas3']
+                pas1_kawal_pemilu = tps_detail_kawal_pemilu_main['pas1']
+                pas2_kawal_pemilu = tps_detail_kawal_pemilu_main['pas2']
+                pas3_kawal_pemilu = tps_detail_kawal_pemilu_main['pas3']
                 total_kawal_pemilu = pas1_kawal_pemilu + pas2_kawal_pemilu + pas3_kawal_pemilu
 
-                totalCompletedTPS = tps_detail_kawal_pemilu['totalCompletedTps']
-                totalJagaTPS = tps_detail_kawal_pemilu['totalJagaTps']
-                totalErrorTPS = tps_detail_kawal_pemilu['totalErrorTps']
-                updateTS = tps_detail_kawal_pemilu['updateTs']
+                totalCompletedTPS = 0
+                totalJagaTPS = 0
+                totalErrorTPS = 0
+                updateTS = 0
+                if 'totalCompletedTps' in tps_detail_kawal_pemilu_main:
+                    totalCompletedTPS = tps_detail_kawal_pemilu_main['totalCompletedTps']
+                if 'totalJagaTps' in tps_detail_kawal_pemilu_main:
+                    totalJagaTPS = tps_detail_kawal_pemilu_main['totalJagaTps']
+                if 'totalErrorTps' in tps_detail_kawal_pemilu_main:
+                    totalErrorTPS = tps_detail_kawal_pemilu_main['totalErrorTps']
+                if 'updateTs' in tps_detail_kawal_pemilu_main:
+                    updateTS = tps_detail_kawal_pemilu_main['updateTs']
 
-                # kalau di kolom utama semua paslon ada angkanya (>=0), 
-                # Param TotalCompletedTPS=1
-                # Param TotalJagaTPS = 1
-                # Param TotalErorTPS >0
+                # 1. Data ada, sudah benar dan valid
+                # KU Nilai Semua Paslon >=0
+                # TotalCompletedTPS= 1
+                # TotalJagaTPS = 1
+                # TotalErrorTPS = 0 
+                # Update TS >0
+                # Objek list >1
+                is1Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS >= 1 and totalJagaTPS >= 1 and totalErrorTPS == 0 and updateTS > 0 and len_kawal_pemilu > 1
+
                 # 2. Data ada, sudah benar namun ada kejanggalan antara Web KPU dan Kawal Pemilu
-                if total_kawal_pemilu == 0 and totalCompletedTPS >= 1 and totalJagaTPS >= 1 and totalErrorTPS > 0:
-                    note_sistem = 'Admin Perlu Mengecek Kesesuaian Data C1'
+                # KU Nilai Semua Paslon >=0
+                # TotalCompletedTPS= 1
+                # TotalJagaTPS = 1
+                # TotalErrorTPS >0 
+                # Update TS >0
+                # Objek list >1
+                is2Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS >= 1 and totalJagaTPS >= 1 and totalErrorTPS > 0 and updateTS > 0 and len_kawal_pemilu > 1
                     
-                # kalau di kolom utama semua paslon ada angkanya (>=0), 
-                # Param TotalCompletedTPS=1
-                # Param TotalJagaTPS = 0
                 # 3. Data ada, sudah benar namun belum tentu valid
-                if total_kawal_pemilu == 0 and totalCompletedTPS >= 1 and totalJagaTPS >= 0:
-                    note_sistem = 'Admin Perlu Mengecek Kesesuaian Data C1'
+                # KU Nilai Semua Paslon >=0
+                # TotalCompletedTPS= 1
+                # TotalJagaTPS = 0
+                # TotalErrorTPS = 0 
+                # Update TS >0
+                # Objek list >1
+                is3Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS >= 1 and totalJagaTPS == 0 and totalErrorTPS == 0 and updateTS > 0 and len_kawal_pemilu > 1
 
-                # kalau di kolom utama semua paslon ada angkanya (tapi semua paslon =0), 
-                # Param TotalCompletedTPS=0
-                # Param TotalJagaTPS = 0 
-                # Param update TS = 0"	
                 # 4. Data Kawal Pemilu belum Ada = Tidak ada data C1
-                if total_kawal_pemilu == 0 and totalCompletedTPS == 0 and totalJagaTPS == 0 and updateTS == 0:
-                    pas1_kawal_pemilu = ''
-                    pas2_kawal_pemilu = ''
-                    pas3_kawal_pemilu = ''
-                    total_kawal_pemilu = ''
+                # KU Nilai Semua Paslon = 0
+                # TotalCompletedTPS= 0
+                # TotalJagaTPS = 0
+                # TotalErrorTPS = 0 
+                # Update TS =0
+                # Objek list =1
+                is4Fullfilled = total_kawal_pemilu == 0 and totalCompletedTPS == 0 and totalJagaTPS == 0 and totalErrorTPS == 0 and updateTS == 0 and len_kawal_pemilu == 1
+                if is4Fullfilled:
+                    raise Exception('Data Kawal Pemilu Kosong')
 
-                # kalau di kolom utama semua paslon ada angkanya (tapi semua paslon =0), 
-                # Param TotalCompletedTPS=0
-                # Param TotalJagaTPS = 1 
-                # Param update TS > 0
-                # Jumlah objek list =1
                 # 5. Website Kawal Pemilu Bug, .Foto C1 Gaada, Data pun masih 0, tapi status dibuat terjaga 
                 # Baik data KPU atau data Kawal Pemilu belum ada
-                if total_kawal_pemilu == 0 and totalCompletedTPS == 0 and totalJagaTPS >= 1 and updateTS > 0 and len_kawal_pemilu == 1:
-                    pas1_kawal_pemilu = ''
-                    pas2_kawal_pemilu = ''
-                    pas3_kawal_pemilu = ''
-                    total_kawal_pemilu = ''
+                # KU Nilai Semua Paslon = 0
+                # TotalCompletedTPS= 0
+                # TotalJagaTPS = 1
+                # TotalErrorTPS = 0 
+                # Update TS > 0
+                # Objek list =1
+                is5Fullfilled = total_kawal_pemilu == 0 and totalCompletedTPS == 0 and totalJagaTPS >= 1 and totalErrorTPS ==0 and updateTS > 0 and len_kawal_pemilu == 1
+                if is5Fullfilled:
+                    raise Exception('Data Kawal Pemilu Kosong')
 
-                # kalau di kolom utama semua paslon ada angkanya (tapi semua paslon =0), 
-                # Param TotalCompletedTPS=0
-                # Param TotalJagaTPS = 1
-                # Param update TS > 0
-                # Jumlah objek list>1
-                # Di website KPU sudah ada foto C1, namun di website kawal pemilu belum ada data C1 yang bisa diambil.. jadi harus input manual
-                if total_kawal_pemilu == 0 and totalCompletedTPS == 0 and totalJagaTPS >= 1 and updateTS > 0 and len_kawal_pemilu > 1:
-                    note_sistem = 'Admin Perlu Mengecek Kesesuaian Data C1'
-                    pas1_kawal_pemilu = ''
-                    pas2_kawal_pemilu = ''
-                    pas3_kawal_pemilu = ''
-                    total_kawal_pemilu = ''
+                # 6. Data kawal pemilu masih 0, padahal c1 nya udah ada
+                # KU Nilai Semua Paslon >=0
+                # TotalCompletedTPS= 0
+                # TotalJagaTPS >= 0
+                # TotalErrorTPS >= 0 
+                # Update TS >0
+                # Objek list >1
+                is6Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS == 0 and totalJagaTPS >= 0 and totalErrorTPS >= 0 and updateTS > 0 and len_kawal_pemilu > 1
 
-            except:
+                # 7. di webiste kawal pemilu sudah ada foto C1, namun di website kawal pemilu belum ada data C1 yang bisa diambil.. jadi harus input manual
+                # KU Nilai Semua Paslon >=0
+                # TotalCompletedTPS= 0
+                # TotalJagaTPS >= 0
+                # TotalErrorTPS >= 0 
+                # Update TS >0
+                # Objek list >1
+                is7Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS == 0 and totalJagaTPS >= 0 and totalErrorTPS >= 0 and updateTS > 0 and len_kawal_pemilu > 1
+
+                if is1Fullfilled or is2Fullfilled or is3Fullfilled or is6Fullfilled or is7Fullfilled:
+                    if total_kawal_pemilu == 0:
+                        for i in range(1, len_kawal_pemilu):
+                            pas1_kawal_pemilu = list_tps_detail_kawal_pemilu[i]['pas1']
+                            pas2_kawal_pemilu = list_tps_detail_kawal_pemilu[i]['pas2']
+                            pas3_kawal_pemilu = list_tps_detail_kawal_pemilu[i]['pas3']
+                            total_kawal_pemilu = pas1_kawal_pemilu + pas2_kawal_pemilu + pas3_kawal_pemilu
+                            if total_kawal_pemilu > 0:
+                                break
+                        note_sistem = 'Admin Perlu Mengecek Kesesuaian Data C1'
+                    else:
+                        for i in range(1, len_kawal_pemilu):
+                            pas1_kawal_pemilu_temp = list_tps_detail_kawal_pemilu[i]['pas1']
+                            pas2_kawal_pemilu_temp = list_tps_detail_kawal_pemilu[i]['pas2']
+                            pas3_kawal_pemilu_temp = list_tps_detail_kawal_pemilu[i]['pas3']
+                            total_kawal_pemilu_temp = pas1_kawal_pemilu_temp + pas2_kawal_pemilu_temp + pas3_kawal_pemilu_temp
+                            if total_kawal_pemilu != total_kawal_pemilu_temp:
+                                note_sistem = 'Admin Perlu Mengecek Kesesuaian Data C1'
+                                break
+
+
+            except Exception as e:
                 pas1_kawal_pemilu = ''
                 pas2_kawal_pemilu = ''
                 pas3_kawal_pemilu = ''
                 total_kawal_pemilu = ''
+
+                if str(e) != 'Data KPU Kosong':
+                    print('error: ' + ', '.join(identifier) + ' ' + str(e))
             
-            kpu = [str(total_polling), str(polling_result_01), str(polling_result_02), str(polling_result_03)]
+            kpu = [str(total_kpu), str(pas1_kpu), str(pas2_kpu), str(pas3_kpu)]
             kawal_pemilu = [str(total_kawal_pemilu), str(pas1_kawal_pemilu), str(pas2_kawal_pemilu), str(pas3_kawal_pemilu)]
             to_link_kpu = 'https://pemilu2024.kpu.go.id/pilpres/hitung-suara/' + province_code + '/' + city_code + '/' + district_code + '/' + village_code + '/' + tps_code
+            to_link_kpu = '=HYPERLINK("' + to_link_kpu + '","Link KPU")'
+            to_link_kawal_pemilu = 'https://kawalpemilu.org/h/' + str(village_code)
+            to_link_kawal_pemilu = '=HYPERLINK("' + to_link_kawal_pemilu + '","Link Kawal Pemilu")'
             to_link_c1 = tps_detail['images'][1]
             if to_link_c1 == None:
                 to_link_c1 = ''
@@ -245,8 +285,9 @@ def update_spreadsheet(city, data_csv):
         print('error update_spreadsheet: ' + str(e))
 
 def process_by_city(province_code, city_code):
-    global candidate
+    global candidate, count_loop
     candidate = get_candidate()
+    count_loop = 0
     city = None
     for c in get_city_list(province_code):
         if c['kode'] == city_code:
@@ -269,8 +310,9 @@ def process_by_city(province_code, city_code):
         print('error update_spreadsheet: ' + str(e))
 
 def process_by_province(province_code):
-    global candidate
+    global candidate, count_loop
     candidate = get_candidate()
+    count_loop = 0
     provinces = get_province_list()
     province = None
     for p in provinces:
@@ -289,14 +331,14 @@ def process_all():
 if __name__ == '__main__':
     # Measure time
     start = time.time()
+    print('Starting at:', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
     # Process
-    freeze_support()
+    print('Processing')
     process_all()
     
     # Measure time
     end = time.time()
     time_executed_minutes = (end - start) / 60
-    
     print('Time Executed:', time_executed_minutes, 'minutes')
     
