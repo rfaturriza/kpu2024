@@ -7,6 +7,8 @@ import os
 from datetime import datetime
 import pandas as pd
 import csv
+import sys
+import traceback
 
 def get_candidate():
     candidate_json_file = open('data/candidates.json')
@@ -89,10 +91,10 @@ def loop_tps(list_tps, province, city, district, village):
 
     for index, tps in enumerate(list_tps):
         # Prevent rate limit connection
-        global count_loop
-        count_loop += 1
-        if (count_loop) % 100 == 0:
-            time.sleep(30)
+        # global count_loop
+        # count_loop += 1
+        # if (count_loop) % 100 == 0:
+        #     time.sleep(30)
 
         identifier = [str(tps['id']) , tps['kode'] , time.strftime('%Y-%m-%d %H:%M:%S') , district['nama'] , village['nama'],tps['nama']]
         try:
@@ -111,20 +113,24 @@ def loop_tps(list_tps, province, city, district, village):
                 pas3_kpu = polling_result[key_03]
                 total_kpu = pas1_kpu + pas2_kpu + pas3_kpu
             except:
-                polling_result_01 = ''
+                pas1_kpu = ''
                 pas2_kpu = ''
                 pas3_kpu = ''
                 total_kpu = ''
 
             try:
-                if polling_result_01 == '' and pas2_kpu == '' and pas3_kpu == '':
+                if pas1_kpu == '' and pas2_kpu == '' and pas3_kpu == '':
                     raise Exception('Data KPU Kosong')
                 
                 if data_kawal_pemilu is None:
                     tps_detail_kawal_pemilu_main = {'pas1': '', 'pas2': '', 'pas3': ''}
                     note_sistem = 'Data Kawal Pemilu Gagal Diambil'
                 else:
-                    list_tps_detail_kawal_pemilu = data_kawal_pemilu['result']['aggregated'][str(index + 1)]
+                    try:
+                        tps_number = int(tps['nama'].split(' ')[1])
+                    except:
+                        tps_number = index + 1
+                    list_tps_detail_kawal_pemilu = data_kawal_pemilu['result']['aggregated'][str(tps_number)]
                     len_kawal_pemilu = len(list_tps_detail_kawal_pemilu)
                     tps_detail_kawal_pemilu_main = list_tps_detail_kawal_pemilu[0]
 
@@ -242,7 +248,7 @@ def loop_tps(list_tps, province, city, district, village):
                 total_kawal_pemilu = ''
 
                 if str(e) != 'Data KPU Kosong':
-                    print('error: ' + ', '.join(identifier) + ' ' + str(e))
+                    print('error: ' + ', '.join(identifier) + ' ' + str(traceback.format_exc()))
             
             kpu = [str(total_kpu), str(pas1_kpu), str(pas2_kpu), str(pas3_kpu)]
             kawal_pemilu = [str(total_kawal_pemilu), str(pas1_kawal_pemilu), str(pas2_kawal_pemilu), str(pas3_kawal_pemilu)]
@@ -250,10 +256,12 @@ def loop_tps(list_tps, province, city, district, village):
             to_link_kpu = '=HYPERLINK("' + to_link_kpu + '","Link KPU")'
             to_link_kawal_pemilu = 'https://kawalpemilu.org/h/' + str(village_code)
             to_link_kawal_pemilu = '=HYPERLINK("' + to_link_kawal_pemilu + '","Link Kawal Pemilu")'
-            to_link_c1 = tps_detail['images'][1]
-            if to_link_c1 == None:
+            try:
+                to_link_c1 = tps_detail['images'][1]
+                to_link_c1 = '=HYPERLINK("' + to_link_c1 + '","Link Foto C1")'
+            except:
                 to_link_c1 = ''
-            link = [to_link_kpu, to_link_c1]
+            link = [to_link_kpu, to_link_c1, to_link_kawal_pemilu]
             write_data = identifier + kpu + kawal_pemilu + link + [note_sistem]
 
             with open(result_file, 'a') as f:
@@ -275,7 +283,7 @@ def update_spreadsheet(city, data_csv):
         cell = wks.find(id_table)
         if cell:
             cell = cell[-1]
-            work_cell = (cell.row + 13, 2)
+            work_cell = (cell.row + 13, 3)
             read_data = pd.read_csv(data_csv, skiprows=1, header=None) 
             read_data.fillna('', inplace=True)
             wks.set_dataframe(read_data, work_cell, copy_head=False)
@@ -328,14 +336,42 @@ def process_all():
     for province in provinces:
         process_by_province(province['kode'])
 
+def ask_input():
+    print('Choose Process:')
+    print('1. All')
+    print('2. By Province')
+    print('3. By City')
+    print('00. Exit')
+    process = input()
+    if process == '1':
+        print('Processing All')
+        process_all()
+    elif process == '2':
+        print('Input Province Code:')
+        province_code = input()
+        print('Processing By Province')
+        process_by_province(province_code)
+    elif process == '3':
+        print('Input Province Code:')
+        province_code = input()
+        print('Input City Code:')
+        city_code = input()
+        print('Processing By City')
+        process_by_city(province_code, city_code)
+    elif process == '00':
+        print('Exit')
+        sys.exit()
+    else:
+        print('Invalid Input')
+        ask_input()
+
 if __name__ == '__main__':
     # Measure time
     start = time.time()
     print('Starting at:', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
     # Process
-    print('Processing')
-    process_all()
+    ask_input()
     
     # Measure time
     end = time.time()
