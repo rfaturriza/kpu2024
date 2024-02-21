@@ -247,7 +247,7 @@ def loop_tps(list_tps, province, city, district, village):
                 pas3_kawal_pemilu = ''
                 total_kawal_pemilu = ''
 
-                if str(e) != 'Data KPU Kosong':
+                if str(e) != 'Data KPU Kosong' and str(e) != 'Data Kawal Pemilu Kosong':
                     print('error: ' + ', '.join(identifier) + ' ' + str(traceback.format_exc()))
             
             kpu = [str(total_kpu), str(pas1_kpu), str(pas2_kpu), str(pas3_kpu)]
