@@ -29,7 +29,7 @@ def create_file(city):
     if not os.path.exists('result'):
         os.makedirs('result')
     with open(result_file, 'w') as f:
-        f.write('ID TPS,KODE TPS,Tanggal Pendataan,Kecamatan,Kelurahan,TPS,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Link Web KPU,Link Foto C1,Notes Sistem\n')
+        f.write('ID TPS,KODE TPS,Tanggal Pendataan,Kecamatan,Kelurahan,TPS,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Link Web KPU,Link Foto C1,Link Kawal Pemilu,Notes Sistem\n')
 
 def setup():
     gc = pygsheets.authorize(service_file='kpu2024-dca0549f3753.json')
@@ -235,8 +235,7 @@ def loop_tps(list_tps, province, city, district, village):
                             pas1_kawal_pemilu_temp = list_tps_detail_kawal_pemilu[i]['pas1']
                             pas2_kawal_pemilu_temp = list_tps_detail_kawal_pemilu[i]['pas2']
                             pas3_kawal_pemilu_temp = list_tps_detail_kawal_pemilu[i]['pas3']
-                            total_kawal_pemilu_temp = pas1_kawal_pemilu_temp + pas2_kawal_pemilu_temp + pas3_kawal_pemilu_temp
-                            if total_kawal_pemilu != total_kawal_pemilu_temp:
+                            if pas1_kawal_pemilu != pas1_kawal_pemilu_temp or pas2_kawal_pemilu != pas2_kawal_pemilu_temp or pas3_kawal_pemilu != pas3_kawal_pemilu_temp:
                                 note_sistem = 'Admin Perlu Mengecek Kesesuaian Data C1'
                                 break
 
@@ -246,6 +245,8 @@ def loop_tps(list_tps, province, city, district, village):
                 pas2_kawal_pemilu = ''
                 pas3_kawal_pemilu = ''
                 total_kawal_pemilu = ''
+                if (str(e) == 'Data Kawal Pemilu Kosong'):
+                    note_sistem = 'Data C1 Kawal Pemilu Kosong'
 
                 if str(e) != 'Data KPU Kosong' and str(e) != 'Data Kawal Pemilu Kosong':
                     print('error: ' + ', '.join(identifier) + ' ' + str(traceback.format_exc()))
@@ -275,20 +276,12 @@ def loop_tps(list_tps, province, city, district, village):
 def update_spreadsheet(city, data_csv):
     try:
         sh = setup()
-        wks = sh[1]
         city_name = city['nama']
-        city_code = city['kode']
-        city_id = str(city['id'])
-        id_table = city_id + '/' + city_code
-        cell = wks.find(id_table)
-        if cell:
-            cell = cell[-1]
-            work_cell = (cell.row + 13, 3)
-            read_data = pd.read_csv(data_csv, skiprows=1, header=None) 
-            read_data.fillna('', inplace=True)
-            wks.set_dataframe(read_data, work_cell, copy_head=False)
-        else :
-            print('Sheet: ' + city_name + ' not found')
+        wks = sh.worksheet_by_title(city_name.upper())
+        work_cell = (22, 3)
+        read_data = pd.read_csv(data_csv, skiprows=1, header=None) 
+        read_data.fillna('', inplace=True)
+        wks.set_dataframe(read_data, work_cell, copy_head=False)
     except Exception as e:
         print('error update_spreadsheet: ' + str(e))
 
