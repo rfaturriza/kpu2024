@@ -309,10 +309,10 @@ def process_by_city(province_code, city_code):
             province = p
             break
     city_name = city['nama']
-    create_file(city)
     if is_spreadsheet_exist(city_name) == False:
         print('Sheet not exist')
         return
+    create_file(city)
     
     list_district = get_district_list(province_code, city_code)
     loop_district(list_district, province, city)
