@@ -74,6 +74,72 @@ def scrap_by_city(province_code, city_code):
         "message": "Scraping by City Started"
     }
 
+@app.route("/scrap-status")
+def scrap_status():
+    inspect = celery.control.inspect()
+    active = inspect.active()
+    return {
+        "status": 200,
+        "message": "Scraping Status",
+        "active": active
+    }
+
+@app.route("/scrap-terminate-all")
+def scrap_terminate_all():
+    inspect = celery.control.inspect()
+    active = inspect.active()
+    for worker in active:
+        for task in active[worker]:
+            if task['name'] == 'job_scrapping_to_spreadsheet':
+                celery.control.revoke(task['id'], terminate=True)
+    return {
+        "status": 200,
+        "message": "Scraping Terminate"
+    }
+
+@app.route("/scrap-terminate")
+def scrap_terminate():
+    inspect = celery.control.inspect()
+    active = inspect.active()
+    for worker in active:
+        for task in active[worker]:
+            if task['name'] == 'job_scrapping_to_spreadsheet':
+                celery.control.revoke(task['id'], terminate=True)
+            if task['name'] == 'job_scrapping_to_spreadsheet_by_province':
+                celery.control.revoke(task['id'], terminate=True)
+            if task['name'] == 'job_scrapping_to_spreadsheet_by_city':
+                celery.control.revoke(task['id'], terminate=True)
+    return {
+        "status": 200,
+        "message": "Scraping Terminate"
+    }
+
+@app.route("/scrap-terminate/<province_code>")
+def scrap_terminate_by_province(province_code):
+    inspect = celery.control.inspect()
+    active = inspect.active()
+    for worker in active:
+        for task in active[worker]:
+            if task['name'] == 'job_scrapping_to_spreadsheet_by_province' and task['args'][0] == province_code:
+                celery.control.revoke(task['id'], terminate=True)
+    return {
+        "status": 200,
+        "message": "Scraping by Province with Province Code " + province_code + " Terminate"
+    }
+
+@app.route("/scrap-terminate/<province_code>/<city_code>")
+def scrap_terminate_by_city(province_code, city_code):
+    inspect = celery.control.inspect()
+    active = inspect.active()
+    for worker in active:
+        for task in active[worker]:
+            if task['name'] == 'job_scrapping_to_spreadsheet_by_city' and task['args'][0] == province_code and task['args'][1] == city_code:
+                celery.control.revoke(task['id'], terminate=True)
+    return {
+        "status": 200,
+        "message": "Scraping by City with Province Code " + province_code + " and City Code " + city_code + " Terminate"
+    }
+
 @app.route("/")
 def hello():
     return "Scrapping APP PEMILU 2024 vs Kawal Pemilu 2024 API"
