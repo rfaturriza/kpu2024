@@ -284,7 +284,15 @@ def update_spreadsheet(city, data_csv):
         wks.set_dataframe(read_data, work_cell, copy_head=False)
     except Exception as e:
         print('error update_spreadsheet: ' + str(traceback.format_exc()))
-
+        
+def is_spreadsheet_exist(city_name):
+    try:
+        sh = setup()
+        wks = sh.worksheet_by_title(city_name.upper())
+        return True
+    except:
+        return False
+    
 def process_by_city(province_code, city_code):
     global candidate, count_loop
     candidate = get_candidate()
@@ -300,10 +308,14 @@ def process_by_city(province_code, city_code):
         if p['kode'] == province_code:
             province = p
             break
+    city_name = city['nama']
     create_file(city)
+    if is_spreadsheet_exist(city_name) == False:
+        print('Sheet not exist')
+        return
+    
     list_district = get_district_list(province_code, city_code)
     loop_district(list_district, province, city)
-    city_name = city['nama']
     try:
         data = 'result/result-' + city_name + '-' + create_file_time + '.csv'
         update_spreadsheet(city, data)
