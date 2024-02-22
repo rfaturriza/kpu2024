@@ -283,7 +283,7 @@ def update_spreadsheet(city, data_csv):
         read_data.fillna('', inplace=True)
         wks.set_dataframe(read_data, work_cell, copy_head=False)
     except Exception as e:
-        print('error update_spreadsheet: ' + str(e))
+        print('error update_spreadsheet: ' + str(traceback.format_exc()))
 
 def process_by_city(province_code, city_code):
     global candidate, count_loop
