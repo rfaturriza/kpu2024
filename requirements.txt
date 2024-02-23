@@ -6,3 +6,4 @@ pandas
 Flask
 Celery
 Redis
+python-dotenv

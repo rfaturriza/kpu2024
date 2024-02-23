@@ -9,6 +9,11 @@ import pandas as pd
 import csv
 import sys
 import traceback
+from dotenv import load_dotenv
+
+dot_env_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dot_env_path)
+ENVIRONMENT_MODE = os.getenv('MODE_TYPE')
 
 def get_candidate():
     candidate_json_file = open('data/candidates.json')
@@ -31,12 +36,19 @@ def create_file(city):
     with open(result_file, 'w') as f:
         f.write('ID TPS,KODE TPS,Tanggal Pendataan,Kecamatan,Kelurahan,TPS,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Link Web KPU,Link Foto C1,Link Kawal Pemilu,Notes Sistem\n')
 
-def setup():
+def setup(province):
+    print(f"YOUR ENVIRONMENT MODE: {ENVIRONMENT_MODE}")
     gc = pygsheets.authorize(service_file='kpu2024-dca0549f3753.json')
-    id_test = '129h_iw2er5z5CXF3sN-XVQ1of3bZDv2uqwcCcRSuwaY'
-    id_sheet = '1fC2mEHpnY_pH_vzWrNBRasD4OpHU-8Fs2RvKa-xG0E0'
-
-    sh = gc.open_by_key(id_test)
+    if ENVIRONMENT_MODE.lower() == 'production':
+        province_name = province['nama']
+        sheet_title = province_name + '-RAKYAT MEMANTAU'
+        sh = gc.open(sheet_title)
+    elif ENVIRONMENT_MODE.lower() == 'development':
+        id_test = os.getenv('SHEET_ID_DEV')
+        sh = gc.open_by_key(id_test)
+    else:
+        print('Environment Mode Not Found')
+        raise Exception('Environment Mode Not Found')
     return sh
 
 def loop_city(province):
@@ -52,7 +64,7 @@ def loop_city(province):
     #     pool.starmap(loop_district, items)
         city_name = city['nama']
         data = 'result/result-' + city_name + '-' + create_file_time + '.csv'
-        update_spreadsheet(city, data)
+        update_spreadsheet(province, city, data)
         # TODO:Remove this break
         # break
 
@@ -273,9 +285,9 @@ def loop_tps(list_tps, province, city, district, village):
             print('error: ' + ', '.join(identifier) + ' ' + str(e))
             continue
 
-def update_spreadsheet(city, data_csv):
+def update_spreadsheet(province, city, data_csv):
     try:
-        sh = setup()
+        sh = setup(province)
         city_name = city['nama']
         wks = sh.worksheet_by_title(city_name.upper())
         work_cell = (22, 3)
@@ -285,9 +297,9 @@ def update_spreadsheet(city, data_csv):
     except Exception as e:
         print('error update_spreadsheet: ' + str(traceback.format_exc()))
         
-def is_spreadsheet_exist(city_name):
+def is_spreadsheet_exist(province, city_name):
     try:
-        sh = setup()
+        sh = setup(province)
         wks = sh.worksheet_by_title(city_name.upper())
         return True
     except:
@@ -309,8 +321,8 @@ def process_by_city(province_code, city_code):
             province = p
             break
     city_name = city['nama']
-    if is_spreadsheet_exist(city_name) == False:
-        print('Sheet not exist')
+    if is_spreadsheet_exist(province, city_name) == False:
+        print(f"Spreadsheet for province {province['nama']} and city {city_name} not found")
         return
     create_file(city)
     
@@ -318,7 +330,7 @@ def process_by_city(province_code, city_code):
     loop_district(list_district, province, city)
     try:
         data = 'result/result-' + city_name + '-' + create_file_time + '.csv'
-        update_spreadsheet(city, data)
+        update_spreadsheet(province, city, data)
     except Exception as e:
         print('error update_spreadsheet: ' + str(e))
 
