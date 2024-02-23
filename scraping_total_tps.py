@@ -2,12 +2,12 @@ import time
 import json
 import os
 from datetime import datetime
-from api_kawalpemilu import api_url
+from api_kawal_pemilu import api_url
 from api import get_city_list
 import requests
 
 def create_file():
-    global create_file_time 
+    global create_file_time
     create_file_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     global result_file
     result_file = 'result/result_total_tps.csv'
@@ -20,23 +20,6 @@ def get_province_list():
     province_file = open('data/province.json')
     province_json = json.load(province_file)
     return province_json
-
-# {
-#     "result": {
-#         "names": [
-#             "ACEH"
-#         ],
-#         "id": "11",
-#         "aggregated": {
-#             "1101": [
-#                 {
-#                     "totalKpuTps": 488,
-#                     "totalLaporTps": 24,
-#                     "idLokasi": "1101",
-#                     "pas2": 14665,
-#                     "totalTps": 697,
-        # https://kp24-fd486.et.r.appspot.com/h?id=11
-        # https://kp24-fd486.et.r.appspot.com/h?id=${code_province}
 
 def get_total_tps_by_province(province_code):
     try:

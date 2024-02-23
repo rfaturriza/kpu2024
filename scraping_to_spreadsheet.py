@@ -1,5 +1,5 @@
 import pygsheets
-import api_kawalpemilu
+import api_kawal_pemilu
 from api import get_city_list, get_district_list, get_tps_list, get_tps_detail,get_village_list
 import time
 import json
@@ -14,6 +14,8 @@ from dotenv import load_dotenv
 dot_env_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dot_env_path)
 ENVIRONMENT_MODE = os.getenv('MODE_TYPE')
+if ENVIRONMENT_MODE != 'production':
+    print(f"YOUR ENVIRONMENT MODE: {ENVIRONMENT_MODE}")
 
 def get_candidate():
     candidate_json_file = open('data/candidates.json')
@@ -26,7 +28,7 @@ def get_province_list():
     return province_json
 
 def create_file(city):
-    global create_file_time 
+    global create_file_time
     create_file_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     city_name = city['nama']
     global result_file
@@ -37,7 +39,6 @@ def create_file(city):
         f.write('ID TPS,KODE TPS,Tanggal Pendataan,Kecamatan,Kelurahan,TPS,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Link Web KPU,Link Foto C1,Link Kawal Pemilu,Notes Sistem\n')
 
 def setup(province):
-    print(f"YOUR ENVIRONMENT MODE: {ENVIRONMENT_MODE}")
     gc = pygsheets.authorize(service_file='kpu2024-dca0549f3753.json')
     if ENVIRONMENT_MODE.lower() == 'production':
         province_name = province['nama']
@@ -121,7 +122,7 @@ def loop_tps(list_tps, province, city, district, village):
 
                 polling_result = tps_detail['chart']
                 pas1_kpu = polling_result[key_01]
-                pas2_kpu = polling_result[key_02]              
+                pas2_kpu = polling_result[key_02]
                 pas3_kpu = polling_result[key_03]
                 total_kpu = pas1_kpu + pas2_kpu + pas3_kpu
             except:
@@ -133,7 +134,7 @@ def loop_tps(list_tps, province, city, district, village):
             try:
                 if pas1_kpu == '' and pas2_kpu == '' and pas3_kpu == '':
                     raise Exception('Data KPU Kosong')
-                
+
                 if data_kawal_pemilu is None:
                     tps_detail_kawal_pemilu_main = {'pas1': '', 'pas2': '', 'pas3': ''}
                     note_sistem = 'Data Kawal Pemilu Gagal Diambil'
@@ -168,7 +169,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # KU Nilai Semua Paslon >=0
                 # TotalCompletedTPS= 1
                 # TotalJagaTPS = 1
-                # TotalErrorTPS = 0 
+                # TotalErrorTPS = 0
                 # Update TS >0
                 # Objek list >1
                 is1Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS >= 1 and totalJagaTPS >= 1 and totalErrorTPS == 0 and updateTS > 0 and len_kawal_pemilu > 1
@@ -177,16 +178,16 @@ def loop_tps(list_tps, province, city, district, village):
                 # KU Nilai Semua Paslon >=0
                 # TotalCompletedTPS= 1
                 # TotalJagaTPS = 1
-                # TotalErrorTPS >0 
+                # TotalErrorTPS >0
                 # Update TS >0
                 # Objek list >1
                 is2Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS >= 1 and totalJagaTPS >= 1 and totalErrorTPS > 0 and updateTS > 0 and len_kawal_pemilu > 1
-                    
+
                 # 3. Data ada, sudah benar namun belum tentu valid
                 # KU Nilai Semua Paslon >=0
                 # TotalCompletedTPS= 1
                 # TotalJagaTPS = 0
-                # TotalErrorTPS = 0 
+                # TotalErrorTPS = 0
                 # Update TS >0
                 # Objek list >1
                 is3Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS >= 1 and totalJagaTPS == 0 and totalErrorTPS == 0 and updateTS > 0 and len_kawal_pemilu > 1
@@ -195,19 +196,19 @@ def loop_tps(list_tps, province, city, district, village):
                 # KU Nilai Semua Paslon = 0
                 # TotalCompletedTPS= 0
                 # TotalJagaTPS = 0
-                # TotalErrorTPS = 0 
+                # TotalErrorTPS = 0
                 # Update TS =0
                 # Objek list =1
                 is4Fullfilled = total_kawal_pemilu == 0 and totalCompletedTPS == 0 and totalJagaTPS == 0 and totalErrorTPS == 0 and updateTS == 0 and len_kawal_pemilu == 1
                 if is4Fullfilled:
                     raise Exception('Data Kawal Pemilu Kosong')
 
-                # 5. Website Kawal Pemilu Bug, .Foto C1 Gaada, Data pun masih 0, tapi status dibuat terjaga 
+                # 5. Website Kawal Pemilu Bug, .Foto C1 Gaada, Data pun masih 0, tapi status dibuat terjaga
                 # Baik data KPU atau data Kawal Pemilu belum ada
                 # KU Nilai Semua Paslon = 0
                 # TotalCompletedTPS= 0
                 # TotalJagaTPS = 1
-                # TotalErrorTPS = 0 
+                # TotalErrorTPS = 0
                 # Update TS > 0
                 # Objek list =1
                 is5Fullfilled = total_kawal_pemilu == 0 and totalCompletedTPS == 0 and totalJagaTPS >= 1 and totalErrorTPS ==0 and updateTS > 0 and len_kawal_pemilu == 1
@@ -218,7 +219,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # KU Nilai Semua Paslon >=0
                 # TotalCompletedTPS= 0
                 # TotalJagaTPS >= 0
-                # TotalErrorTPS >= 0 
+                # TotalErrorTPS >= 0
                 # Update TS >0
                 # Objek list >1
                 is6Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS == 0 and totalJagaTPS >= 0 and totalErrorTPS >= 0 and updateTS > 0 and len_kawal_pemilu > 1
@@ -227,7 +228,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # KU Nilai Semua Paslon >=0
                 # TotalCompletedTPS= 0
                 # TotalJagaTPS >= 0
-                # TotalErrorTPS >= 0 
+                # TotalErrorTPS >= 0
                 # Update TS >0
                 # Objek list >1
                 is7Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS == 0 and totalJagaTPS >= 0 and totalErrorTPS >= 0 and updateTS > 0 and len_kawal_pemilu > 1
@@ -262,7 +263,7 @@ def loop_tps(list_tps, province, city, district, village):
 
                 if str(e) != 'Data KPU Kosong' and str(e) != 'Data Kawal Pemilu Kosong':
                     print('error: ' + ', '.join(identifier) + ' ' + str(traceback.format_exc()))
-            
+
             kpu = [str(total_kpu), str(pas1_kpu), str(pas2_kpu), str(pas3_kpu)]
             kawal_pemilu = [str(total_kawal_pemilu), str(pas1_kawal_pemilu), str(pas2_kawal_pemilu), str(pas3_kawal_pemilu)]
             to_link_kpu = 'https://pemilu2024.kpu.go.id/pilpres/hitung-suara/' + province_code + '/' + city_code + '/' + district_code + '/' + village_code + '/' + tps_code
@@ -291,12 +292,12 @@ def update_spreadsheet(province, city, data_csv):
         city_name = city['nama']
         wks = sh.worksheet_by_title(city_name.upper())
         work_cell = (22, 3)
-        read_data = pd.read_csv(data_csv, skiprows=1, header=None) 
+        read_data = pd.read_csv(data_csv, skiprows=1, header=None)
         read_data.fillna('', inplace=True)
         wks.set_dataframe(read_data, work_cell, copy_head=False)
     except Exception as e:
         print('error update_spreadsheet: ' + str(traceback.format_exc()))
-        
+
 def is_spreadsheet_exist(province, city_name):
     try:
         sh = setup(province)
@@ -304,7 +305,7 @@ def is_spreadsheet_exist(province, city_name):
         return True
     except:
         return False
-    
+
 def process_by_city(province_code, city_code):
     global candidate, count_loop
     candidate = get_candidate()
@@ -325,7 +326,7 @@ def process_by_city(province_code, city_code):
         print(f"Spreadsheet for province {province['nama']} and city {city_name} not found")
         return
     create_file(city)
-    
+
     list_district = get_district_list(province_code, city_code)
     loop_district(list_district, province, city)
     try:
@@ -389,9 +390,8 @@ if __name__ == '__main__':
 
     # Process
     ask_input()
-    
+
     # Measure time
     end = time.time()
     time_executed_minutes = (end - start) / 60
     print('Time Executed:', time_executed_minutes, 'minutes')
-    
