@@ -97,7 +97,7 @@ def loop_tps(list_tps, province, city, district, village):
     district_code = district['kode']
     village_code = village['kode']
     try:
-        data_kawal_pemilu = api_kawalpemilu.get_detail_village(village_code)
+        data_kawal_pemilu = api_kawal_pemilu.get_detail_village(village_code)
     except Exception as e:
         print('error get_detail_village: ' + str(e))
         data_kawal_pemilu = None
