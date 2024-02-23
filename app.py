@@ -24,24 +24,6 @@ def job_scraping_to_spreadsheet_by_city(province_code, city_code):
     scraping_to_spreadsheet.process_by_city(province_code, city_code)
     pass
 
-def testA():
-    time.sleep(360)
-    return "Hello World"
-
-@celery.task(name='test')
-def test():
-    testA()
-    pass
-
-@app.route("/test")
-def test_route():
-    task = test.delay()
-    return {
-        "status": 200,
-        "message": "Test Started",
-        "task_id": task.id
-    }
-
 @app.route("/scrap-all")
 def scrap_all():
     inspect = celery.control.inspect()
