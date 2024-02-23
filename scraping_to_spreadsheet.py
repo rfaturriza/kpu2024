@@ -60,14 +60,9 @@ def loop_city(province):
         city_code = city['kode']
         list_district = get_district_list(province_code, city_code)
         loop_district(list_district, province, city)
-    # with ThreadPool() as pool:
-    #     items = [(districts, province, city) for city in list_city for districts in [get_district_list(province_code, city['kode'])]]
-    #     pool.starmap(loop_district, items)
         city_name = city['nama']
         data = 'result/result-' + city_name + '-' + create_file_time + '.csv'
         update_spreadsheet(province, city, data)
-        # TODO:Remove this break
-        # break
 
 def loop_district(districts, province, city):
     province_code = province['kode']
@@ -76,8 +71,6 @@ def loop_district(districts, province, city):
         district_code = district['kode']
         list_village = get_village_list(province_code, city_code, district_code)
         loop_village(list_village, province, city, district)
-        # TODO:Remove this break
-        # break
 
 def loop_village(villages, province, city, district):
     province_code = province['kode']
@@ -87,9 +80,6 @@ def loop_village(villages, province, city, district):
         village_code = village['kode']
         list_tps = get_tps_list(province_code, city_code, district_code, village_code)
         loop_tps(list_tps, province, city, district, village)
-
-        # TODO:Remove this break
-        # break
 
 def loop_tps(list_tps, province, city, district, village):
     province_code = province['kode']
@@ -103,12 +93,6 @@ def loop_tps(list_tps, province, city, district, village):
         data_kawal_pemilu = None
 
     for index, tps in enumerate(list_tps):
-        # Prevent rate limit connection
-        # global count_loop
-        # count_loop += 1
-        # if (count_loop) % 100 == 0:
-        #     time.sleep(30)
-
         identifier = [str(tps['id']) , tps['kode'] , time.strftime('%Y-%m-%d %H:%M:%S') , district['nama'] , village['nama'],tps['nama']]
         try:
             tps_code = tps['kode']
