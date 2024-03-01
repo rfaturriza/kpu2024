@@ -34,7 +34,7 @@ def scrap_all():
                 return {
                     "status": 200,
                     "message": "Scraping All Still Running",
-                    "task_id": task.id
+                    "task_id": task['id']
                 }
     task = job_scraping_to_spreadsheet.delay()
     return {
@@ -53,7 +53,7 @@ def scrap_by_province(province_code):
                 return {
                     "status": 200,
                     "message": "Scraping by Province with Province Code " + province_code + " Still Running",
-                    "task_id": task.id
+                    "task_id": task['id']
                 }
     task = job_scraping_to_spreadsheet_by_province.delay(province_code)
     return {
@@ -72,7 +72,7 @@ def scrap_by_city(province_code, city_code):
                 return {
                     "status": 200,
                     "message": "Scraping by City with Province Code " + province_code + " and City Code " + city_code + " Still Running",
-                    "task_id": task.id
+                    "task_id": task['id']
                 }
     task = job_scraping_to_spreadsheet_by_city.delay(province_code, city_code)
     return {
