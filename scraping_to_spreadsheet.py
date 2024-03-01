@@ -266,7 +266,7 @@ def loop_tps(list_tps, province, city, district, village):
                 pas1_kawal_pemilu = ''
                 pas2_kawal_pemilu = ''
                 pas3_kawal_pemilu = ''
-                total_kawal_pemilu = ''
+                total_kawal_pemilu = f'=SUM(N{22 + count_loop}:P{22 + count_loop})'
                 if (str(e) == 'Data Kawal Pemilu Kosong'):
                     note_sistem = 'Data C1 Kawal Pemilu Kosong'
 
