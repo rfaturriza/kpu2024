@@ -85,7 +85,11 @@ def scrap_by_city(province_code, city_code):
 def scrap_status():
     inspect = celery.control.inspect()
     active = inspect.active()
+    schedule = inspect.scheduled()
+    reserved = inspect.reserved()
     list_task = []
+    list_task_scheduled = []
+    list_task_reserved = []
     for worker in active:
         for task in active[worker]:
             list_task.append({
@@ -93,10 +97,30 @@ def scrap_status():
                 "task_name": task['name'],
                 "task_args": task['args'],
             })
+    for worker in schedule:
+        for task in schedule[worker]:
+            list_task_scheduled.append({
+                "task_id": task['request']['id'],
+                "task_name": task['request']['name'],
+                "task_args": task['request']['args'],
+            })
+    for worker in reserved:
+        for task in reserved[worker]:
+            list_task_reserved.append({
+                "task_id": task['request']['id'],
+                "task_name": task['request']['name'],
+                "task_args": task['request']['args'],
+            })
+
+        
     return {
         "status": 200,
         "message": "Scraping Status",
-        "result": list_task
+        "result": {
+            "active": list_task,
+            "scheduled": list_task_scheduled,
+            "reserved": list_task_reserved
+        }
     }
 
 @app.route("/scrap-status/<task_id>")
