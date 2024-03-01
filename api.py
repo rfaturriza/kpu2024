@@ -1,4 +1,5 @@
 import requests
+import traceback
 
 url = 'https://pemilu2024.kpu.go.id/'
 api_url = 'https://sirekap-obj-data.kpu.go.id/'
@@ -30,10 +31,9 @@ def get_province_list():
             return response.json()
         else:
             return None
-    except requests.exceptions.Timeout:
+    except:
+        print(f'Error get_province_list: {url}, {traceback.format_exc()}')
         get_province_list()
-    except Exception as e:
-        raise e
 
 def get_city_list(province_id):
     url = api_url + enpoint_ppwp + province_id + '.json'
@@ -43,10 +43,9 @@ def get_city_list(province_id):
             return response.json()
         else:
             return None
-    except requests.exceptions.Timeout:
+    except:
+        print(f'Error get_city_list: {url}, {traceback.format_exc()}')
         get_city_list(province_id)
-    except Exception as e:
-        raise e
 
 def get_district_list(province_id, city_id):
     url = api_url + enpoint_ppwp + province_id + '/' + city_id + '.json'
@@ -56,10 +55,9 @@ def get_district_list(province_id, city_id):
             return response.json()
         else:
             return None
-    except requests.exceptions.Timeout:
+    except:
+        print(f'Error get_district_list: {url}, {traceback.format_exc()}')
         get_district_list(province_id, city_id)
-    except Exception as e:
-        raise e
 
 def get_village_list(province_id, city_id, district_id):
     url = api_url + enpoint_ppwp + province_id + '/' + city_id + '/' + district_id + '.json'
@@ -69,10 +67,9 @@ def get_village_list(province_id, city_id, district_id):
             return response.json()
         else:
             return None
-    except requests.exceptions.Timeout:
+    except:
+        print(f'Error get_village_list: {url}, {traceback.format_exc()}')
         get_village_list(province_id, city_id, district_id)
-    except Exception as e:
-        raise e
 
 def get_tps_list(province_id, city_id, district_id, village_id):
     url = api_url + enpoint_ppwp + province_id + '/' + city_id + '/' + district_id + '/' + village_id + '.json'
@@ -83,10 +80,9 @@ def get_tps_list(province_id, city_id, district_id, village_id):
             return response.json()
         else:
             return None
-    except requests.exceptions.Timeout:
+    except:
+        print(f'Error get_tps_list: {url}, {traceback.format_exc()}')
         get_tps_list(province_id, city_id, district_id, village_id)
-    except Exception as e:
-        raise e
 
 def get_tps_detail(province_id, city_id, district_id, village_id, tps_id):
     url = api_url + enpoint_hhcw_ppwp + province_id + '/' + city_id + '/' + district_id + '/' + village_id + '/' + tps_id + '.json'
@@ -96,10 +92,9 @@ def get_tps_detail(province_id, city_id, district_id, village_id, tps_id):
             return response.json()
         else:
             return None
-    except requests.exceptions.Timeout:
+    except:
+        print(f'Error get_tps_detail: {url}, {traceback.format_exc()}')
         get_tps_detail(province_id, city_id, district_id, village_id, tps_id)
-    except Exception as e:
-        raise e
 
 def get_candidate_list():
     url = api_url + endpoint_candidate

@@ -19,6 +19,5 @@ def get_detail_village(village_code):
     except requests.exceptions.Timeout:
         get_detail_village(village_code)
     except Exception as e:
-        print('error get_detail_village: ' + str(e))
         raise e
     

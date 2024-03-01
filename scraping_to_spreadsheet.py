@@ -82,16 +82,20 @@ def loop_village(villages, province, city, district):
         loop_tps(list_tps, province, city, district, village)
 
 def loop_tps(list_tps, province, city, district, village):
+    global count_loop
     province_code = province['kode']
     city_code = city['kode']
     district_code = district['kode']
     village_code = village['kode']
     try:
         data_kawal_pemilu = api_kawal_pemilu.get_detail_village(village_code)
-    except Exception as e:
-        print('error get_detail_village: ' + str(e))
+    except:
+        print(f'Error Get Kawal Pemilu Data: {province_code} {city_code} {district_code} {village_code}', traceback.format_exc())
         data_kawal_pemilu = None
 
+    if list_tps is None:
+        print(f'Error Get TPS Data: {province_code} {city_code} {district_code} {village_code}')
+        return
     for index, tps in enumerate(list_tps):
         identifier = [str(tps['id']) , tps['kode'] , time.strftime('%Y-%m-%d %H:%M:%S') , district['nama'] , village['nama'],tps['nama']]
         try:
@@ -104,16 +108,35 @@ def loop_tps(list_tps, province, city, district, village):
                 key_02 = list(candidate.keys())[1]
                 key_03 = list(candidate.keys())[2]
 
-                polling_result = tps_detail['chart']
-                pas1_kpu = polling_result[key_01]
-                pas2_kpu = polling_result[key_02]
-                pas3_kpu = polling_result[key_03]
-                total_kpu = pas1_kpu + pas2_kpu + pas3_kpu
+                try:
+                    polling_result = tps_detail['chart']
+                except:
+                    polling_result = {
+                        key_01: '',
+                        key_02: '',
+                        key_03: '',
+                    }
+                try:
+                    pas1_kpu = polling_result[key_01]
+                except:
+                    pas1_kpu = ''
+                try:
+                    pas2_kpu = polling_result[key_02]
+                except:
+                    pas2_kpu = ''
+                try:
+                    pas3_kpu = polling_result[key_03]
+                except:
+                    pas3_kpu = ''
+                total_kpu = f'=SUM(J{22 + count_loop}:L{22 + count_loop})'
             except:
                 pas1_kpu = ''
                 pas2_kpu = ''
                 pas3_kpu = ''
                 total_kpu = ''
+                txt = open('error_kpu.txt', 'a')
+                write = f'{identifier}\n,{traceback.format_exc()}\n\n'
+                txt.write(write)
 
             try:
                 if pas1_kpu == '' and pas2_kpu == '' and pas3_kpu == '':
@@ -122,6 +145,8 @@ def loop_tps(list_tps, province, city, district, village):
                 if data_kawal_pemilu is None:
                     tps_detail_kawal_pemilu_main = {'pas1': '', 'pas2': '', 'pas3': ''}
                     note_sistem = 'Data Kawal Pemilu Gagal Diambil'
+                    list_tps_detail_kawal_pemilu = []
+                    len_kawal_pemilu = 0
                 else:
                     try:
                         tps_number = int(tps['nama'].split(' ')[1])
@@ -134,7 +159,7 @@ def loop_tps(list_tps, province, city, district, village):
                 pas1_kawal_pemilu = tps_detail_kawal_pemilu_main['pas1']
                 pas2_kawal_pemilu = tps_detail_kawal_pemilu_main['pas2']
                 pas3_kawal_pemilu = tps_detail_kawal_pemilu_main['pas3']
-                total_kawal_pemilu = pas1_kawal_pemilu + pas2_kawal_pemilu + pas3_kawal_pemilu
+                total_kawal_pemilu = f'=SUM(N{22 + count_loop}:P{22 + count_loop})'
 
                 totalCompletedTPS = 0
                 totalJagaTPS = 0
@@ -149,6 +174,8 @@ def loop_tps(list_tps, province, city, district, village):
                 if 'updateTs' in tps_detail_kawal_pemilu_main:
                     updateTS = tps_detail_kawal_pemilu_main['updateTs']
 
+                isKawalPemiluExist = pas1_kawal_pemilu != '' and pas2_kawal_pemilu != '' and pas3_kawal_pemilu != ''
+                isKPUExist = pas1_kpu != '' and pas2_kpu != '' and pas3_kpu != ''
                 # 1. Data ada, sudah benar dan valid
                 # KU Nilai Semua Paslon >=0
                 # TotalCompletedTPS= 1
@@ -156,7 +183,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # TotalErrorTPS = 0
                 # Update TS >0
                 # Objek list >1
-                is1Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS >= 1 and totalJagaTPS >= 1 and totalErrorTPS == 0 and updateTS > 0 and len_kawal_pemilu > 1
+                is1Fullfilled = isKawalPemiluExist and totalCompletedTPS >= 1 and totalJagaTPS >= 1 and totalErrorTPS == 0 and updateTS > 0 and len_kawal_pemilu > 1
 
                 # 2. Data ada, sudah benar namun ada kejanggalan antara Web KPU dan Kawal Pemilu
                 # KU Nilai Semua Paslon >=0
@@ -165,7 +192,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # TotalErrorTPS >0
                 # Update TS >0
                 # Objek list >1
-                is2Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS >= 1 and totalJagaTPS >= 1 and totalErrorTPS > 0 and updateTS > 0 and len_kawal_pemilu > 1
+                is2Fullfilled = isKawalPemiluExist and totalCompletedTPS >= 1 and totalJagaTPS >= 1 and totalErrorTPS > 0 and updateTS > 0 and len_kawal_pemilu > 1
 
                 # 3. Data ada, sudah benar namun belum tentu valid
                 # KU Nilai Semua Paslon >=0
@@ -174,7 +201,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # TotalErrorTPS = 0
                 # Update TS >0
                 # Objek list >1
-                is3Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS >= 1 and totalJagaTPS == 0 and totalErrorTPS == 0 and updateTS > 0 and len_kawal_pemilu > 1
+                is3Fullfilled = isKawalPemiluExist and totalCompletedTPS >= 1 and totalJagaTPS == 0 and totalErrorTPS == 0 and updateTS > 0 and len_kawal_pemilu > 1
 
                 # 4. Data Kawal Pemilu belum Ada = Tidak ada data C1
                 # KU Nilai Semua Paslon = 0
@@ -183,7 +210,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # TotalErrorTPS = 0
                 # Update TS =0
                 # Objek list =1
-                is4Fullfilled = total_kawal_pemilu == 0 and totalCompletedTPS == 0 and totalJagaTPS == 0 and totalErrorTPS == 0 and updateTS == 0 and len_kawal_pemilu == 1
+                is4Fullfilled = isKawalPemiluExist == False and totalCompletedTPS == 0 and totalJagaTPS == 0 and totalErrorTPS == 0 and updateTS == 0 and len_kawal_pemilu == 1
                 if is4Fullfilled:
                     raise Exception('Data Kawal Pemilu Kosong')
 
@@ -195,7 +222,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # TotalErrorTPS = 0
                 # Update TS > 0
                 # Objek list =1
-                is5Fullfilled = total_kawal_pemilu == 0 and totalCompletedTPS == 0 and totalJagaTPS >= 1 and totalErrorTPS ==0 and updateTS > 0 and len_kawal_pemilu == 1
+                is5Fullfilled = isKawalPemiluExist == False and totalCompletedTPS == 0 and totalJagaTPS >= 1 and totalErrorTPS ==0 and updateTS > 0 and len_kawal_pemilu == 1
                 if is5Fullfilled:
                     raise Exception('Data Kawal Pemilu Kosong')
 
@@ -206,7 +233,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # TotalErrorTPS >= 0
                 # Update TS >0
                 # Objek list >1
-                is6Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS == 0 and totalJagaTPS >= 0 and totalErrorTPS >= 0 and updateTS > 0 and len_kawal_pemilu > 1
+                is6Fullfilled = isKawalPemiluExist and totalCompletedTPS == 0 and totalJagaTPS >= 0 and totalErrorTPS >= 0 and updateTS > 0 and len_kawal_pemilu > 1
 
                 # 7. di webiste kawal pemilu sudah ada foto C1, namun di website kawal pemilu belum ada data C1 yang bisa diambil.. jadi harus input manual
                 # KU Nilai Semua Paslon >=0
@@ -215,7 +242,7 @@ def loop_tps(list_tps, province, city, district, village):
                 # TotalErrorTPS >= 0
                 # Update TS >0
                 # Objek list >1
-                is7Fullfilled = total_kawal_pemilu >= 0 and totalCompletedTPS == 0 and totalJagaTPS >= 0 and totalErrorTPS >= 0 and updateTS > 0 and len_kawal_pemilu > 1
+                is7Fullfilled = isKawalPemiluExist and totalCompletedTPS == 0 and totalJagaTPS >= 0 and totalErrorTPS >= 0 and updateTS > 0 and len_kawal_pemilu > 1
 
                 if is1Fullfilled or is2Fullfilled or is3Fullfilled or is6Fullfilled or is7Fullfilled:
                     if total_kawal_pemilu == 0:
@@ -235,8 +262,6 @@ def loop_tps(list_tps, province, city, district, village):
                             if pas1_kawal_pemilu != pas1_kawal_pemilu_temp or pas2_kawal_pemilu != pas2_kawal_pemilu_temp or pas3_kawal_pemilu != pas3_kawal_pemilu_temp:
                                 note_sistem = 'Admin Perlu Mengecek Kesesuaian Data C1'
                                 break
-
-
             except Exception as e:
                 pas1_kawal_pemilu = ''
                 pas2_kawal_pemilu = ''
@@ -252,7 +277,7 @@ def loop_tps(list_tps, province, city, district, village):
             kawal_pemilu = [str(total_kawal_pemilu), str(pas1_kawal_pemilu), str(pas2_kawal_pemilu), str(pas3_kawal_pemilu)]
             to_link_kpu = 'https://pemilu2024.kpu.go.id/pilpres/hitung-suara/' + province_code + '/' + city_code + '/' + district_code + '/' + village_code + '/' + tps_code
             to_link_kpu = '=HYPERLINK("' + to_link_kpu + '","Link KPU")'
-            to_link_kawal_pemilu = 'https://kawalpemilu.org/h/' + str(village_code)
+            to_link_kawal_pemilu = 'https://kawalpemilu.org/h/' + str(tps_code)
             to_link_kawal_pemilu = '=HYPERLINK("' + to_link_kawal_pemilu + '","Link Kawal Pemilu")'
             try:
                 to_link_c1 = tps_detail['images'][1]
@@ -269,6 +294,8 @@ def loop_tps(list_tps, province, city, district, village):
         except Exception as e:
             print('error: ' + ', '.join(identifier) + ' ' + str(e))
             continue
+        
+        count_loop += 1
 
 def update_spreadsheet(province, city, data_csv):
     try:
@@ -306,6 +333,7 @@ def process_by_city(province_code, city_code):
             province = p
             break
     city_name = city['nama']
+    print('Processing By City: ', city_name)
     if is_spreadsheet_exist(province, city_name) == False:
         print(f"Spreadsheet for province {province['nama']} and city {city_name} not found")
         return
@@ -329,6 +357,7 @@ def process_by_province(province_code):
         if p['kode'] == province_code:
             province = p
             break
+    print('Processing By Province: ', province['nama'])
     loop_city(province)
 
 def process_all():
@@ -351,14 +380,12 @@ def ask_input():
     elif process == '2':
         print('Input Province Code:')
         province_code = input()
-        print('Processing By Province')
         process_by_province(province_code)
     elif process == '3':
         print('Input Province Code:')
         province_code = input()
         print('Input City Code:')
         city_code = input()
-        print('Processing By City')
         process_by_city(province_code, city_code)
     elif process == '00':
         print('Exit')
