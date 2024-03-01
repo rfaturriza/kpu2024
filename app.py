@@ -47,12 +47,30 @@ def scrap_all():
 def scrap_by_province(province_code):
     inspect = celery.control.inspect()
     active = inspect.active()
+    reserved = inspect.reserved()
+    schedule = inspect.scheduled()
     for worker in active:
         for task in active[worker]:
             if task['name'] == 'job_scraping_to_spreadsheet_by_province' and task['args'][0] == province_code:
                 return {
                     "status": 200,
                     "message": "Scraping by Province with Province Code " + province_code + " Still Running",
+                    "task_id": task['id']
+                }
+    for worker in reserved:
+        for task in reserved[worker]:
+            if task['name'] == 'job_scraping_to_spreadsheet_by_province' and task['args'][0] == province_code:
+                return {
+                    "status": 200,
+                    "message": "Scraping by Province with Province Code " + province_code + " In Queue",
+                    "task_id": task['id']
+                }
+    for worker in schedule:
+        for task in schedule[worker]:
+            if task['name'] == 'job_scraping_to_spreadsheet_by_province' and task['args'][0] == province_code:
+                return {
+                    "status": 200,
+                    "message": "Scraping by Province with Province Code " + province_code + " Scheduled",
                     "task_id": task['id']
                 }
     task = job_scraping_to_spreadsheet_by_province.delay(province_code)
