@@ -56,11 +56,14 @@ def loop_city(province):
     province_code = province['kode']
     list_city = get_city_list(province_code)
     for city in list_city:
+        city_name = city['nama']
+        if is_spreadsheet_exist(province, city_name) == False:
+            print(f"Spreadsheet for province {province['nama']} and city {city_name} not found")
+            return
         create_file(city)
         city_code = city['kode']
         list_district = get_district_list(province_code, city_code)
         loop_district(list_district, province, city)
-        city_name = city['nama']
         data = 'result/result-' + city_name + '-' + create_file_time + '.csv'
         update_spreadsheet(province, city, data)
 

@@ -100,16 +100,16 @@ def scrap_status():
     for worker in schedule:
         for task in schedule[worker]:
             list_task_scheduled.append({
-                "task_id": task['request']['id'],
-                "task_name": task['request']['name'],
-                "task_args": task['request']['args'],
+                "task_id": task['id'],
+                "task_name": task['name'],
+                "task_args": task['args'],
             })
     for worker in reserved:
         for task in reserved[worker]:
             list_task_reserved.append({
-                "task_id": task['request']['id'],
-                "task_name": task['request']['name'],
-                "task_args": task['request']['args'],
+                "task_id": task['id'],
+                "task_name": task['name'],
+                "task_args": task['args'],
             })
 
         
