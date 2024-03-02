@@ -322,7 +322,7 @@ def update_spreadsheet(province, city, data_csv):
         sh = setup(province)
         city_name = city['nama']
         wks = sh.worksheet_by_title(city_name.upper())
-        total_tps = wks.get_value("C13")
+        total_tps = wks.get_value("C14")
         fisrt_cell = "C22"
         last_cell = "U"+str(22+int(total_tps))
         existing_data = wks.get_as_df(
