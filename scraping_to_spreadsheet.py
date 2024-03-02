@@ -345,6 +345,15 @@ def update_spreadsheet(province, city, data_csv):
         total_rows_log_udrm = wks_log_udrm.rows
         last_id_log_kpu = wks_log_kpu.get_value(f"C{total_rows_log_kpu}")
         last_id_log_udrm = wks_log_udrm.get_value(f"B{total_rows_log_udrm}")
+        
+        try:
+            last_id_log_kpu = int(last_id_log_kpu)
+        except:
+            last_id_log_kpu = 0
+        try:
+            last_id_log_udrm = int(last_id_log_udrm)
+        except:
+            last_id_log_udrm = 0
         if  type(last_id_log_kpu) != int:
             last_id_log_kpu = 0
         if  type(last_id_log_udrm) != int:
