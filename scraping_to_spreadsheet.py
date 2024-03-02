@@ -38,6 +38,23 @@ def create_file(city):
     with open(result_file, 'w') as f:
         f.write('ID TPS,KODE TPS,Tanggal Pendataan,Kecamatan,Kelurahan,TPS,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Seluruh Paslon,Paslon 01,Paslon 02,Paslon 03,Link Web KPU,Link Foto C1,Link Kawal Pemilu,Notes Sistem\n')
 
+def create_log_file(city):
+    global create_kpu_file_time
+    create_kpu_file_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    global create_udrm_file_time
+    create_udrm_file_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    city_name = city['nama']
+    global log_kpu_file
+    global log_udrm_file
+    log_kpu_file = 'result/log-kpu-' + city_name + '-' + create_file_time + '.csv'
+    log_udrm_file = 'result/log-udrm-' + city_name + '-' + create_file_time + '.csv'
+    if not os.path.exists('result'):
+        os.makedirs('result')
+    with open(log_kpu_file, 'w') as f:
+        f.write('No,ID UDRM,ID Perubahan,Tanggal Aktivitas,ID TPS,Data Suara 01,Data Suara 02,Data Suara 03,Keterangan\n')
+    with open(log_udrm_file, 'w') as f:
+        f.write('No,ID UDRM,Tanggal Aktivitas,Kegiatan\n')
+
 def setup(province):
     gc = pygsheets.authorize(service_file='kpu2024-dca0549f3753.json')
     if ENVIRONMENT_MODE.lower() == 'production':
@@ -305,10 +322,91 @@ def update_spreadsheet(province, city, data_csv):
         sh = setup(province)
         city_name = city['nama']
         wks = sh.worksheet_by_title(city_name.upper())
+        total_tps = wks.get_value("C13")
+        fisrt_cell = "C22"
+        last_cell = "U"+str(22+int(total_tps))
+        existing_data = wks.get_as_df(
+                start=fisrt_cell,
+                end=last_cell,
+                has_header = False
+            )
         work_cell = (22, 3)
-        read_data = pd.read_csv(data_csv, skiprows=1, header=None)
-        read_data.fillna('', inplace=True)
-        wks.set_dataframe(read_data, work_cell, copy_head=False)
+        scrap_data = pd.read_csv(data_csv, skiprows=1, header=None)
+        scrap_data.fillna('', inplace=True)
+        if existing_data.empty:
+            print('MULAI SET DATA TO SPREADSHEET')
+            wks.set_dataframe(scrap_data, work_cell, copy_head=False)
+            return
+        # UPDATE EXISTING DATA
+        print('MULAI UPDATE DATA TO SPREADSHEET')
+        wks_log_kpu = sh.worksheet_by_title("Log Aktivitas KPU")
+        wks_log_udrm = sh.worksheet_by_title("Log Aktivitas RM")
+        total_rows_log_kpu = wks_log_kpu.rows
+        total_rows_log_udrm = wks_log_udrm.rows
+        last_id_log_kpu = wks_log_kpu.get_value(f"C{total_rows_log_kpu}")
+        last_id_log_udrm = wks_log_udrm.get_value(f"B{total_rows_log_udrm}")
+        if  type(last_id_log_kpu) != int:
+            last_id_log_kpu = 0
+        if  type(last_id_log_udrm) != int:
+            last_id_log_udrm = 0
+        last_id_log_udrm += 1
+        create_log_file(city)
+        for row in range(len(scrap_data)):
+            change_pas1 = ''
+            change_pas2 = ''
+            change_pas3 = ''
+            for col in range(len(scrap_data.columns)):
+                is_kpu_col = col == 7 or col == 8 or col == 9
+                is_kawal_pemilu_col = col == 11 or col == 12 or col == 13
+                if col != 7 or col != 8 or col != 9 or col == 11 or col == 12 or col == 13:
+                    continue
+                if is_kpu_col:
+                    if scrap_data.iloc[row,col] != existing_data.iloc[row,col]:
+                        if col == 7:
+                            change_pas1 = f'{existing_data.iloc[row,col]}->{scrap_data.iloc[row,col]}'
+                        if col == 8:
+                            change_pas2 = f'{existing_data.iloc[row,col]}->{scrap_data.iloc[row,col]}'
+                        if col == 9:
+                            change_pas3 = f'{existing_data.iloc[row,col]}->{scrap_data.iloc[row,col]}'
+                        # Update the data df_sheet
+                        existing_data.iloc[row,col] = existing_data.iloc[row,col]
+                        
+                if is_kawal_pemilu_col:
+                    if existing_data.iloc[row,col] == '':
+                        existing_data.iloc[row,col] = scrap_data.iloc[row,col]
+            
+            if change_pas1 != '' or change_pas2 != '' or change_pas3 != '':
+                last_id_log_kpu += 1
+                id_tps = existing_data.iloc[row,0]
+                # Update csv Log KPU
+                with open(log_kpu_file, 'a') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['',last_id_log_kpu, last_id_log_udrm, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), id_tps, change_pas1, change_pas2, change_pas3, ''])
+        # Update csv Log UDRM
+        with open(log_udrm_file, 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(['',last_id_log_udrm, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), f'{city_name} Berhasil Diupdate'])
+        
+        # SET DATA TO SPREADSHEET
+        wks.set_dataframe(existing_data, work_cell, copy_head=False)
+
+        # SET LOG KPU TO SPREADSHEET
+        try:
+            csv_log_kpu = pd.read_csv(log_kpu_file, skiprows=1, header=None)
+            csv_log_kpu.fillna('', inplace=True)
+            work_cell_log_kpu = (total_rows_log_kpu+1, 1)
+            wks_log_kpu.add_rows(len(csv_log_kpu))
+            wks_log_kpu.set_dataframe(csv_log_kpu, work_cell_log_kpu, copy_head=False)
+        except pd.errors.EmptyDataError:
+            print(f'SKIPED LOG KPU {city_name} BECAUSE DATA IS SAME')
+
+        # SET LOG UDRM TO SPREADSHEET
+        csv_log_udrm = pd.read_csv(log_udrm_file, skiprows=1, header=None)
+        csv_log_udrm.fillna('', inplace=True)
+        work_cell_log_udrm = (total_rows_log_udrm+1, 1)
+        wks_log_udrm.add_rows(len(csv_log_udrm))
+        wks_log_udrm.set_dataframe(csv_log_udrm, work_cell_log_udrm, copy_head=False)
+
     except Exception as e:
         print('error update_spreadsheet: ' + str(traceback.format_exc()))
 
