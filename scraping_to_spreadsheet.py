@@ -329,7 +329,7 @@ def update_spreadsheet(province, city, data_csv):
                 start=fisrt_cell,
                 end=last_cell,
                 has_header = False,
-                values_render_option="FORMULA"
+                value_render="FORMULA"
             )
         work_cell = (22, 3)
         scrap_data = pd.read_csv(data_csv, skiprows=1, header=None)
