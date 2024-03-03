@@ -328,7 +328,8 @@ def update_spreadsheet(province, city, data_csv):
         existing_data = wks.get_as_df(
                 start=fisrt_cell,
                 end=last_cell,
-                has_header = False
+                has_header = False,
+                values_render_option="FORMULA"
             )
         work_cell = (22, 3)
         scrap_data = pd.read_csv(data_csv, skiprows=1, header=None)
