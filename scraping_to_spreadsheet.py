@@ -1,6 +1,6 @@
 import pygsheets
 import api_kawal_pemilu
-from api import get_city_list, get_district_list, get_tps_list, get_tps_detail,get_village_list
+from api import get_city_list, get_district_list, get_tps_list, get_tps_detail,get_village_list, get_kelurahan_detail
 import time
 import json
 import os
@@ -9,12 +9,15 @@ import pandas as pd
 import csv
 import sys
 import traceback
-from dotenv import load_dotenv
+from dotenv import dotenv_values
+from io import StringIO
 
 dot_env_path = os.path.join(os.path.dirname(__file__), '.env')
-load_dotenv(dot_env_path)
-ENVIRONMENT_MODE = os.getenv('MODE_TYPE')
+config = dotenv_values(dot_env_path)
+ENVIRONMENT_MODE = config['MODE_TYPE']
 if ENVIRONMENT_MODE != 'production':
+    print(f"YOUR SHEET ID DEV: {config['SHEET_ID_DEV']}")
+    print(f"YOUR ENV: {config}")
     print(f"YOUR ENVIRONMENT MODE: {ENVIRONMENT_MODE}")
 
 def get_candidate():
@@ -62,7 +65,7 @@ def setup(province):
         sheet_title = province_name + '-RAKYAT MEMANTAU'
         sh = gc.open(sheet_title)
     elif ENVIRONMENT_MODE.lower() == 'development':
-        id_test = os.getenv('SHEET_ID_DEV')
+        id_test = config['SHEET_ID_DEV']
         sh = gc.open_by_key(id_test)
     else:
         print('Environment Mode Not Found')
@@ -73,6 +76,8 @@ def loop_city(province):
     province_code = province['kode']
     list_city = get_city_list(province_code)
     for city in list_city:
+        global count_loop
+        count_loop = 0
         city_name = city['nama']
         if is_spreadsheet_exist(province, city_name) == False:
             print(f"Spreadsheet for province {province['nama']} and city {city_name} not found")
@@ -150,13 +155,34 @@ def loop_tps(list_tps, province, city, district, village):
                     pas3_kpu = ''
                 total_kpu = f'=SUM(J{22 + count_loop}:L{22 + count_loop})'
             except:
-                pas1_kpu = ''
-                pas2_kpu = ''
-                pas3_kpu = ''
-                total_kpu = ''
-                txt = open('error_kpu.txt', 'a')
-                write = f'{identifier}\n,{traceback.format_exc()}\n\n'
-                txt.write(write)
+                try:
+                    kelurahan_detail = get_kelurahan_detail(province_code, city_code, district_code, village_code)
+                    polling_result = kelurahan_detail['table'][tps_code]
+                    try:
+                        pas1_kpu = polling_result[key_01]
+                    except:
+                        pas1_kpu = ''
+                    try:
+                        pas2_kpu = polling_result[key_02]
+                    except:
+                        pas2_kpu = ''
+                    try:
+                        pas3_kpu = polling_result[key_03]
+                    except:
+                        pas3_kpu = ''
+                    total_kpu = f'=SUM(J{22 + count_loop}:L{22 + count_loop})'
+                    note_sistem = 'Kejanggalan KPU: Data sedang proses, tetapi ada total suara'
+                    txt = open('error_kpu.txt', 'a')
+                    write = f'{identifier}\n,{traceback.format_exc()}\n\n'
+                    txt.write(write)
+                except:
+                    pas1_kpu = ''
+                    pas2_kpu = ''
+                    pas3_kpu = ''
+                    total_kpu = ''
+                    txt = open('error_kpu.txt', 'a')
+                    write = f'{identifier}\n,{traceback.format_exc()}\n\n'
+                    txt.write(write)
 
             try:
                 if pas1_kpu == '' and pas2_kpu == '' and pas3_kpu == '':

@@ -96,6 +96,18 @@ def get_tps_detail(province_id, city_id, district_id, village_id, tps_id):
         print(f'Error get_tps_detail: {url}, {traceback.format_exc()}')
         get_tps_detail(province_id, city_id, district_id, village_id, tps_id)
 
+def get_kelurahan_detail(province_id, city_id, district_id, village_id):
+    url = api_url + enpoint_hhcw_ppwp + province_id + '/' + city_id + '/' + district_id + '/' + village_id + '.json'
+    try:
+        response = requests.get(url, timeout=30)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+    except:
+        print(f'Error get_kelurahan_detail: {url}, {traceback.format_exc()}')
+        get_kelurahan_detail(province_id, city_id, district_id, village_id)
+
 def get_candidate_list():
     url = api_url + endpoint_candidate
     response = requests.get(url, timeout=30)
