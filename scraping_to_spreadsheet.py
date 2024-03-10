@@ -161,6 +161,7 @@ def loop_tps(list_tps, province, city, district, village):
                 try:
                     kelurahan_detail = get_kelurahan_detail(province_code, city_code, district_code, village_code)
                     polling_result = kelurahan_detail['table'][tps_code]
+                    status_progress = polling_result['status_progress']
                     try:
                         pas1_kpu = polling_result[key_01]
                     except:
@@ -175,17 +176,13 @@ def loop_tps(list_tps, province, city, district, village):
                         pas3_kpu = ''
                     total_kpu = f'=SUM(J{22 + count_loop}:L{22 + count_loop})'
                     note_sistem = 'Kejanggalan KPU: Data sedang proses, tetapi ada total suara'
-                    txt = open('error_kpu.txt', 'a')
-                    write = f'{identifier}\n,{traceback.format_exc()}\n\n'
-                    txt.write(write)
+                    print(f'{identifier}\n,{traceback.format_exc()}\n\n')
                 except:
                     pas1_kpu = ''
                     pas2_kpu = ''
                     pas3_kpu = ''
                     total_kpu = ''
-                    txt = open('error_kpu.txt', 'a')
-                    write = f'{identifier}\n,{traceback.format_exc()}\n\n'
-                    txt.write(write)
+                    print(f'{identifier}\n,{traceback.format_exc()}\n\n')
 
             try:
                 if pas1_kpu == '' and pas2_kpu == '' and pas3_kpu == '':
