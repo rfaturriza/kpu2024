@@ -48,6 +48,8 @@ def get_city_list(province_id):
     try:
         response = requests.get(url, timeout=30)
         if response.status_code == 200:
+            with open(json_file, 'w') as f:
+                json.dump(response.json(), f)
             return response.json()
         else:
             get_city_list(province_id)
@@ -57,9 +59,18 @@ def get_city_list(province_id):
 
 def get_district_list(province_id, city_id):
     url = api_url + enpoint_ppwp + province_id + '/' + city_id + '.json'
+    json_file = f'data/{city_id}.json'
+    try:
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+            return data
+    except:
+        pass
     try:
         response = requests.get(url, timeout=30)
         if response.status_code == 200:
+            with open(json_file, 'w') as f:
+                json.dump(response.json(), f)
             return response.json()
         else:
             get_district_list(province_id, city_id)
@@ -68,10 +79,19 @@ def get_district_list(province_id, city_id):
         get_district_list(province_id, city_id)
 
 def get_village_list(province_id, city_id, district_id):
+    json_file = f'data/{district_id}.json'
     url = api_url + enpoint_ppwp + province_id + '/' + city_id + '/' + district_id + '.json'
+    try:
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+            return data
+    except:
+        pass
     try:
         response = requests.get(url, timeout=30)
         if response.status_code == 200:
+            with open(json_file, 'w') as f:
+                json.dump(response.json(), f)
             return response.json()
         else:
             get_village_list(province_id, city_id, district_id)
@@ -80,11 +100,19 @@ def get_village_list(province_id, city_id, district_id):
         get_village_list(province_id, city_id, district_id)
 
 def get_tps_list(province_id, city_id, district_id, village_id):
+    json_file = f'data/{village_id}.json'
     url = api_url + enpoint_ppwp + province_id + '/' + city_id + '/' + district_id + '/' + village_id + '.json'
     try:
-        
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+            return data
+    except:
+        pass
+    try:
         response = requests.get(url, timeout=30)
         if response.status_code == 200:
+            with open(json_file, 'w') as f:
+                json.dump(response.json(), f)
             return response.json()
         else:
             get_tps_list(province_id, city_id, district_id, village_id)
