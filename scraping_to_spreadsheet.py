@@ -10,7 +10,6 @@ import csv
 import sys
 import traceback
 from dotenv import dotenv_values
-from io import StringIO
 
 dot_env_path = os.path.join(os.path.dirname(__file__), '.env')
 config = dotenv_values(dot_env_path)
@@ -82,6 +81,10 @@ def loop_city(province):
         if is_spreadsheet_exist(province, city_name) == False:
             print(f"Spreadsheet for province {province['nama']} and city {city_name} not found")
             return
+        if os.path.exists('result/result-server-7mar24'):
+            get_last_cache = last_cache_city_csv(city_name)
+            update_spreadsheet(province, city, get_last_cache)
+            continue
         create_file(city)
         city_code = city['kode']
         list_district = get_district_list(province_code, city_code)
@@ -350,7 +353,7 @@ def update_spreadsheet(province, city, data_csv):
         wks = sh.worksheet_by_title(city_name.upper())
         total_tps = wks.get_value("C14")
         fisrt_cell = "C22"
-        last_cell = "U"+str(22+int(total_tps))
+        last_cell = "T"+str(22+int(total_tps))
         existing_data = wks.get_as_df(
                 start=fisrt_cell,
                 end=last_cell,
@@ -474,6 +477,10 @@ def process_by_city(province_code, city_code):
     if is_spreadsheet_exist(province, city_name) == False:
         print(f"Spreadsheet for province {province['nama']} and city {city_name} not found")
         return
+    if os.path.exists('result/result-server-7mar24'):
+        get_last_cache = last_cache_city_csv(city_name)
+        update_spreadsheet(province, city, get_last_cache)
+        return
     create_file(city)
 
     list_district = get_district_list(province_code, city_code)
@@ -503,6 +510,37 @@ def process_all():
     provinces = get_province_list()
     for province in provinces:
         process_by_province(province['kode'])
+
+def last_cache_city_csv(city_name):
+    file_location = 'result'
+    latest_date = None
+    file_path = None
+    for root, dirs, files in os.walk(file_location):
+        for file in files:
+            file_city_name = file.split('-')[1]
+            if file.endswith('.csv') and file_city_name == city_name and 'result-' in file:
+                # result-ACEH BARAT-2024-02-23 22:46:13
+                # take ACEH BARAT as city name
+                # take 2024-02-23 22:46:13 as date
+                year = file.split('-')[2]
+                month = file.split('-')[3]
+                day_hour = file.split('-')[4]
+                date = f'{year}-{month}-{day_hour}'.replace('.csv', '')
+                date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+                if latest_date is None:
+                    latest_date = date
+                    file_path = os.path.join(root, file)
+                if date > latest_date:
+                    latest_date = date
+                    file_path = os.path.join(root, file)
+    if file_path is not None:
+        print(f"Found latest cache for {city_name} at {file_path}")
+        global create_file_time
+        create_file_time = latest_date.strftime('%Y-%m-%d %H:%M:%S')
+    return file_path
+
+
+
 
 def ask_input():
     print('Choose Process:')

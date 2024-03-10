@@ -1,5 +1,6 @@
 import requests
 import traceback
+import json
 
 url = 'https://pemilu2024.kpu.go.id/'
 api_url = 'https://sirekap-obj-data.kpu.go.id/'
@@ -30,19 +31,26 @@ def get_province_list():
         if response.status_code == 200:
             return response.json()
         else:
-            return None
+            get_province_list()
     except:
         print(f'Error get_province_list: {url}, {traceback.format_exc()}')
         get_province_list()
 
 def get_city_list(province_id):
+    json_file = f'data/{province_id}.json'
+    try:
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+            return data
+    except:
+        pass
     url = api_url + enpoint_ppwp + province_id + '.json'
     try:
         response = requests.get(url, timeout=30)
         if response.status_code == 200:
             return response.json()
         else:
-            return None
+            get_city_list(province_id)
     except:
         print(f'Error get_city_list: {url}, {traceback.format_exc()}')
         get_city_list(province_id)
@@ -54,7 +62,7 @@ def get_district_list(province_id, city_id):
         if response.status_code == 200:
             return response.json()
         else:
-            return None
+            get_district_list(province_id, city_id)
     except:
         print(f'Error get_district_list: {url}, {traceback.format_exc()}')
         get_district_list(province_id, city_id)
@@ -66,7 +74,7 @@ def get_village_list(province_id, city_id, district_id):
         if response.status_code == 200:
             return response.json()
         else:
-            return None
+            get_village_list(province_id, city_id, district_id)
     except:
         print(f'Error get_village_list: {url}, {traceback.format_exc()}')
         get_village_list(province_id, city_id, district_id)
@@ -79,7 +87,7 @@ def get_tps_list(province_id, city_id, district_id, village_id):
         if response.status_code == 200:
             return response.json()
         else:
-            return None
+            get_tps_list(province_id, city_id, district_id, village_id)
     except:
         print(f'Error get_tps_list: {url}, {traceback.format_exc()}')
         get_tps_list(province_id, city_id, district_id, village_id)
@@ -91,7 +99,7 @@ def get_tps_detail(province_id, city_id, district_id, village_id, tps_id):
         if response.status_code == 200:
             return response.json()
         else:
-            return None
+            get_tps_detail(province_id, city_id, district_id, village_id, tps_id)
     except:
         print(f'Error get_tps_detail: {url}, {traceback.format_exc()}')
         get_tps_detail(province_id, city_id, district_id, village_id, tps_id)
@@ -103,7 +111,7 @@ def get_kelurahan_detail(province_id, city_id, district_id, village_id):
         if response.status_code == 200:
             return response.json()
         else:
-            return None
+            get_kelurahan_detail(province_id, city_id, district_id, village_id)
     except:
         print(f'Error get_kelurahan_detail: {url}, {traceback.format_exc()}')
         get_kelurahan_detail(province_id, city_id, district_id, village_id)
@@ -114,5 +122,5 @@ def get_candidate_list():
     if response.status_code == 200:
         return response.json()
     else:
-        return None
+        get_candidate_list()
     
