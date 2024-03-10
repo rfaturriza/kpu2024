@@ -81,7 +81,7 @@ def loop_city(province):
         if is_spreadsheet_exist(province, city_name) == False:
             print(f"Spreadsheet for province {province['nama']} and city {city_name} not found")
             return
-        if os.path.exists('result/result-server-7mar24'):
+        if os.path.exists('result/result-server-7mar24-test'):
             get_last_cache = last_cache_city_csv(city_name)
             update_spreadsheet(province, city, get_last_cache)
             continue
@@ -144,24 +144,15 @@ def loop_tps(list_tps, province, city, district, village):
                         key_02: '',
                         key_03: '',
                     }
-                try:
-                    pas1_kpu = polling_result[key_01]
-                except:
-                    pas1_kpu = ''
-                try:
-                    pas2_kpu = polling_result[key_02]
-                except:
-                    pas2_kpu = ''
-                try:
-                    pas3_kpu = polling_result[key_03]
-                except:
-                    pas3_kpu = ''
+                pas1_kpu = polling_result[key_01]
+                pas2_kpu = polling_result[key_02]
+                pas3_kpu = polling_result[key_03]
                 total_kpu = f'=SUM(J{22 + count_loop}:L{22 + count_loop})'
             except:
                 try:
                     kelurahan_detail = get_kelurahan_detail(province_code, city_code, district_code, village_code)
                     polling_result = kelurahan_detail['table'][tps_code]
-                    status_progress = polling_result['status_progress']
+                    
                     try:
                         pas1_kpu = polling_result[key_01]
                     except:
@@ -474,7 +465,7 @@ def process_by_city(province_code, city_code):
     if is_spreadsheet_exist(province, city_name) == False:
         print(f"Spreadsheet for province {province['nama']} and city {city_name} not found")
         return
-    if os.path.exists('result/result-server-7mar24'):
+    if os.path.exists('result/result-server-7mar24-test'):
         get_last_cache = last_cache_city_csv(city_name)
         update_spreadsheet(province, city, get_last_cache)
         return
