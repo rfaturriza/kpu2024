@@ -1,6 +1,6 @@
 import pygsheets
 import api_kawal_pemilu
-from api import get_city_list, get_district_list, get_tps_list, get_tps_detail,get_village_list, get_kelurahan_detail
+from api import get_city_list, get_district_list, get_tps_list, get_tps_detail,get_village_list, get_kelurahan_detail, get_kecamatan_detail
 import time
 import json
 import os
@@ -130,7 +130,6 @@ def loop_tps(list_tps, province, city, district, village):
             tps_code = tps['kode']
             tps_detail = get_tps_detail(province_code, city_code, district_code, village_code, tps_code)
             note_sistem = ''
-
             try:
                 key_01 = list(candidate.keys())[0]
                 key_02 = list(candidate.keys())[1]
@@ -151,8 +150,24 @@ def loop_tps(list_tps, province, city, district, village):
             except:
                 try:
                     kelurahan_detail = get_kelurahan_detail(province_code, city_code, district_code, village_code)
-                    polling_result = kelurahan_detail['table'][tps_code]
-                    
+                    kecamatan_detail = get_kecamatan_detail(province_code, city_code, district_code)
+                    table_kelurahan = kelurahan_detail['table']
+                    polling_result = table_kelurahan[tps_code]
+                    polling_result_kecamatan = kecamatan_detail['table'][village_code]
+
+                    try:
+                        pas1_kpu_kecamatan = polling_result_kecamatan[key_01]
+                    except:
+                        pas1_kpu_kecamatan = None
+                    try:
+                        pas2_kpu_kecamatan = polling_result_kecamatan[key_02]
+                    except:
+                        pas2_kpu_kecamatan = None
+                    try:
+                        pas3_kpu_kecamatan = polling_result_kecamatan[key_03]
+                    except:
+                        pas3_kpu_kecamatan = None
+
                     try:
                         pas1_kpu = polling_result[key_01]
                     except:
@@ -165,8 +180,37 @@ def loop_tps(list_tps, province, city, district, village):
                         pas3_kpu = polling_result[key_03]
                     except:
                         pas3_kpu = ''
+
+                    total_pas1_kelurahan = None
+                    total_pas2_kelurahan = None
+                    total_pas3_kelurahan = None
+                    for _, value in table_kelurahan.items():
+                        try:
+                            if total_pas1_kelurahan is None:
+                                total_pas1_kelurahan = value[key_01]
+                            else:
+                                total_pas1_kelurahan += value[key_01]
+                        except:
+                            continue
+                        try:
+                            if total_pas2_kelurahan is None:
+                                total_pas2_kelurahan = value[key_02]
+                            else:
+                                total_pas2_kelurahan += value[key_02]
+                        except:
+                            continue
+                        try:
+                            if total_pas3_kelurahan is None:
+                                total_pas3_kelurahan = value[key_03]
+                            else:
+                                total_pas3_kelurahan += value[key_03]
+                        except:
+                            continue
+                    
+                    if pas1_kpu_kecamatan != total_pas1_kelurahan or pas2_kpu_kecamatan != total_pas2_kelurahan or pas3_kpu_kecamatan != total_pas3_kelurahan:
+                        note_sistem = 'Kejanggalan KPU: Data sedang proses, tetapi ada total suara'
+
                     total_kpu = f'=SUM(J{22 + count_loop}:L{22 + count_loop})'
-                    note_sistem = 'Kejanggalan KPU: Data sedang proses, tetapi ada total suara'
                     print(f'{identifier}\n,{traceback.format_exc()}\n\n')
                 except:
                     pas1_kpu = ''
