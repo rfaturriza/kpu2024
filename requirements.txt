@@ -7,3 +7,5 @@ Flask
 Celery
 Redis
 python-dotenv
+flower
+

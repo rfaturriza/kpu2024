@@ -161,13 +161,11 @@ def scrap_status():
         schedule = inspect.scheduled()
         reserved = inspect.reserved()
         registered = inspect.registered()
-        revoked = inspect.revoked()
 
         list_task = []
         list_task_scheduled = []
         list_task_reserved = []
         list_task_registered = []
-        list_task_revoked = []
         for worker in active:
             for task in active[worker]:
                 list_task.append({
@@ -192,13 +190,6 @@ def scrap_status():
         for worker in registered:
             for task in registered[worker]:
                 list_task_registered.append({
-                    "task_id": task['id'],
-                    "task_name": task['name'],
-                    "task_args": task['args'],
-                })
-        for worker in revoked:
-            for task in revoked[worker]:
-                list_task_revoked.append({
                     "task_id": task['id'],
                     "task_name": task['name'],
                     "task_args": task['args'],
