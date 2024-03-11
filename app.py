@@ -204,7 +204,6 @@ def scrap_status():
                 "scheduled": list_task_scheduled,
                 "reserved": list_task_reserved,
                 "registered": list_task_registered,
-                "revoked": list_task_revoked,
             }
         }
     except:
