@@ -220,9 +220,6 @@ def loop_tps(list_tps, province, city, district, village):
                     print(f'{identifier}\n,{traceback.format_exc()}\n\n')
 
             try:
-                if pas1_kpu == '' and pas2_kpu == '' and pas3_kpu == '':
-                    raise Exception('Data KPU Kosong')
-
                 if data_kawal_pemilu is None:
                     tps_detail_kawal_pemilu_main = {'pas1': '', 'pas2': '', 'pas3': ''}
                     note_sistem = 'Data Kawal Pemilu Gagal Diambil'
@@ -426,10 +423,12 @@ def update_spreadsheet(province, city, data_csv):
             change_pas1 = ''
             change_pas2 = ''
             change_pas3 = ''
+            is_change_kawal_pemilu = False
             for col in range(len(scrap_data.columns)):
                 is_kpu_col = col == 7 or col == 8 or col == 9
                 is_kawal_pemilu_col = col == 11 or col == 12 or col == 13
-                if col != 7 or col != 8 or col != 9 or col == 11 or col == 12 or col == 13:
+                is_skip_col = not (col == 7 or col == 8 or col == 9 or col == 11 or col == 12 or col == 13)
+                if is_skip_col:
                     continue
                 if is_kpu_col:
                     if scrap_data.iloc[row,col] != existing_data.iloc[row,col]:
@@ -445,8 +444,9 @@ def update_spreadsheet(province, city, data_csv):
                 if is_kawal_pemilu_col:
                     if existing_data.iloc[row,col] == '':
                         existing_data.iloc[row,col] = scrap_data.iloc[row,col]
+                        is_change_kawal_pemilu = True
             
-            if change_pas1 != '' or change_pas2 != '' or change_pas3 != '':
+            if change_pas1 != '' or change_pas2 != '' or change_pas3 != '' or is_change_kawal_pemilu:
                 last_id_log_kpu += 1
                 id_tps = existing_data.iloc[row,0]
                 # Update csv Log KPU
@@ -549,8 +549,7 @@ def last_cache_city_csv(city_name):
     file_path = None
     for root, dirs, files in os.walk(file_location):
         for file in files:
-            file_city_name = file.split('-')[1]
-            if file.endswith('.csv') and file_city_name == city_name and 'result-' in file:
+            if file.endswith('.csv') and 'result-' in file and file.split('-')[1] == city_name:
                 # result-ACEH BARAT-2024-02-23 22:46:13
                 # take ACEH BARAT as city name
                 # take 2024-02-23 22:46:13 as date
